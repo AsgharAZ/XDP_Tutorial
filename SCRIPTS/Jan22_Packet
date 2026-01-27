@@ -1,0 +1,11 @@
+Script started on 2026-01-22 03:48:21+05:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/SCRIPTS[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/SCRIPTS[00m$ cd [K ../ 
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ ls [K[K[Kcd c[Kxdp-tutorial/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd packet01-parsing/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls[K[Kls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ cd [K[K[Kcode xdp_prog_kern.c
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ exit
+[?2004lexit
+
+Script done on 2026-01-22 07:13:46+05:00 [COMMAND_EXIT_CODE="0"]

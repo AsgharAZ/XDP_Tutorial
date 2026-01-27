@@ -1,0 +1,993 @@
+Script started on 2026-01-20 02:51:03+05:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/SCRIPTS[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/SCRIPTS[00m$ cd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ ls [K[K[Kcd xdp-tutorial/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd packet-[K01-parsing/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ code xdp_prog_kern.c
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ code xdp_prog_kern.c
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load
+[?2004lt: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ s load
+[?2004ls: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7meval $(./testenv.sh a[27m[7ml[27m[7mias)[27m[K[A[K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7meval $(./testenv.sh a[27m[7ml[27m[7mias)[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ eval $(./testenv.sh alias)
+[?2004lbash: ./testenv.sh: No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls[K[K c[K[Kcd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ ls
+[?2004l[0m[01;34madvanced01-xdp-tc-interact[0m  [01;32mconfigure[0m              README.org
+[01;34madvanced03-AF_XDP[0m           [01;34mexperiment01-tailgrow[0m  setup_dependencies.org
+[01;34mbasic01-xdp-pass[0m            [01;34minstall[0m                [01;34msetup-testlab[0m
+[01;34mbasic02-prog-by-name[0m        [01;34mlib[0m                    [01;34mtestenv[0m
+[01;34mbasic03-map-counter[0m         Makefile               [01;34mtracing01-xdp-simple[0m
+[01;34mbasic04-pinning-maps[0m        [01;34mpacket01-parsing[0m       [01;34mtracing02-xdp-monitor[0m
+[01;34mbasic-solutions[0m             [01;34mpacket02-rewriting[0m     [01;34mtracing03-xdp-debug-print[0m
+[01;34mcommon[0m                      [01;34mpacket03-redirecting[0m   [01;34mtracing04-xdp-tcpdump[0m
+config.mk                   [01;34mpacket-solutions[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ lscd ../eval $(./testenv.sh alias)
+[?2004lbash: ./testenv.sh: No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd testenv
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ;[Kls[K[Kcd testenveval $(./testenv.sh alias)
+[?2004lWARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ \[K
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ eval $(./testenv.sh alias)
+[?2004lWARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ eval $(./testenv.sh alias)[1@s[1@u[1@doeval $(./testenv.sh alias) [A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [C[C[C[C eval $(./testenv.sh alias)[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [C[C[C[C[C
+
+[?2004lWARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+[sudo] password for xainecks: 
+sudo: eval: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t load
+[?2004lNo environment selected; use --name to select one or 'setup' to create one
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t loadsudo eval $(./testenv.sh alias)[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t load[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kls
+[?2004lconfig.sh  README.org  [0m[01;32msetup-env.sh[0m  [01;32mtestenv.sh[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ testenv.sh alias
+[?2004ltestenv.sh: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ./testenv.s [Kh alias
+[?2004lEval this with `eval $(./testenv.sh alias)` to create shell alias
+WARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+alias t='sudo /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ./testenv.sh alias[Kt k[K[K[K[7meval $(../testenv/testenv.sh a[27m[7ml[27m[7mias)[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ eval $(../testenv/testenv.sh alias)
+[?2004lWARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t ping
+[?2004lNo environment selected; use --name to select one or 'setup' to create one
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t load
+[?2004lNo environment selected; use --name to select one or 'setup' to create one
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t setup
+[?2004lSetting up new environment 'xdptut-1947'
+Setup environment 'xdptut-1947' with peer ip fc00:dead:cafe:1::2.
+Waiting for interface configuration to settle...
+
+Running ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.036 ms
+
+--- fc00:dead:cafe:1::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.036/0.036/0.036/0.000 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t [K help
+[?2004l[sudo] password for xainecks: 
+Usage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Options:
+-h, --help          Show this usage text
+
+-n, --name <name>   Set name of test environment. If not set, the last used
+                    name will be used, or a new one generated.
+
+-g, --gen-new       Generate a new test environment name even though an existing
+                    environment is selected as the current one.
+
+-l, --loader <prog> Specify program to use for loading XDP programs.
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp-loader'
+
+-s, --stats <prog>  Specify program to use for getting statistics ('stats' command).
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp_stats'
+
+    --legacy-ip     Enable legacy IP (IPv4) support.
+                    For setup and reset commands this enables configuration of legacy
+                    IP addresses on the interface, for the ping command it switches to
+                    legacy ping.
+
+    --vlan          Enable VLAN support.
+                    When used with the setup and reset commands, these VLAN IDs will
+                    be configured: 1 2. The VLAN interfaces are named as
+                    <ifname>.<vlid>.
+                    When used with the ping command, the pings will be sent on the
+                    first VLAN ID (1).
+
+    --inner         Use with tcpdump command to run on inner interface.
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t unload
+[?2004lLoader './xdp-loader' is not executable
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ man t [K
+[?2004lNo manual entry for t
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ man t [K[K[K[K[K[Kt alias
+[?2004lEval this with `eval $(/home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh alias)` to create shell alias
+
+alias t='/home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t stast
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Use --help to see the list of options.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ t ts[K[Kstats
+[?2004lStats tool './xdp_stats' is not executable
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ls ../
+[?2004l[0m[01;34madvanced01-xdp-tc-interact[0m  [01;34mbasic04-pinning-maps[0m  [01;34mexperiment01-tailgrow[0m  [01;34mpacket02-rewriting[0m      [01;34msetup-testlab[0m              [01;34mtracing04-xdp-tcpdump[0m
+[01;34madvanced03-AF_XDP[0m           [01;34mbasic-solutions[0m       [01;34minstall[0m                [01;34mpacket03-redirecting[0m    [01;34mtestenv[0m
+[01;34mbasic01-xdp-pass[0m            [01;34mcommon[0m                [01;34mlib[0m                    [01;34mpacket-solutions[0m        [01;34mtracing01-xdp-simple[0m
+[01;34mbasic02-prog-by-name[0m        config.mk             Makefile               README.org              [01;34mtracing02-xdp-monitor[0m
+[01;34mbasic03-map-counter[0m         [01;32mconfigure[0m             [01;34mpacket01-parsing[0m       setup_dependencies.org  [01;34mtracing03-xdp-debug-print[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ cd //[K.[K[K../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd packet01-parsing/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls[K[Kcd packet01-parsing/../[Kls[C[C[C[Ct stats
+[?2004lWARN: Failed to open bpf map file:/sys/fs/bpf/xdptut-1947/xdp_stats_map err(2):No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ;[Kt load
+[?2004l/home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh: line 454: $#-1: substring expression < 0
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload
+[?2004lNeed prog ID or --all
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload -a
+[?2004lgetopt: invalid option -- 'a'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t [K help
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Options:
+-h, --help          Show this usage text
+
+-n, --name <name>   Set name of test environment. If not set, the last used
+                    name will be used, or a new one generated.
+
+-g, --gen-new       Generate a new test environment name even though an existing
+                    environment is selected as the current one.
+
+-l, --loader <prog> Specify program to use for loading XDP programs.
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp-loader'
+
+-s, --stats <prog>  Specify program to use for getting statistics ('stats' command).
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp_stats'
+
+    --legacy-ip     Enable legacy IP (IPv4) support.
+                    For setup and reset commands this enables configuration of legacy
+                    IP addresses on the interface, for the ping command it switches to
+                    legacy ping.
+
+    --vlan          Enable VLAN support.
+                    When used with the setup and reset commands, these VLAN IDs will
+                    be configured: 1 2. The VLAN interfaces are named as
+                    <ifname>.<vlid>.
+                    When used with the ping command, the pings will be sent on the
+                    first VLAN ID (1).
+
+    --inner         Use with tcpdump command to run on inner interface.
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t steup[K[K[K[Ketup
+[?2004lSetting up new environment 'xdptut-1947'
+Environment for 'xdptut-1947' already exists
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ^C[?2004l[?2004h[?2004l
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t stta[K[Katus
+[?2004lCurrently selected environment: xdptut-1947
+  Namespace:      xdptut-1947 (id: 0)
+  Prefix:         fc00:dead:cafe:1::/64
+  Iface:          xdptut-1947@if2 UP fc00:dead:cafe:1::1/64 fe80::5409:9ff:fe24:c60b/64 
+
+All existing environments:
+  xdptut-1947
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t list
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Use --help to see the list of options.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t teardown
+[?2004lTearing down environment 'xdptut-1947'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ste[K[Ketup
+[?2004lSetting up new environment 'xdptut-669c'
+Setup environment 'xdptut-669c' with peer ip fc00:dead:cafe:1::2.
+Waiting for interface configuration to settle...
+
+Running ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.024 ms
+
+--- fc00:dead:cafe:1::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.024/0.024/0.024/0.000 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo t enter -n left
+[?2004lsudo: t: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t enter -n left
+[?2004lEnvironment for left doesn't seem to exist
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t enter [K -n xdptut-669c
+[?2004l[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/packet01-parsingroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/packet01-parsing# [K]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/packet01-parsingroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/packet01-parsing# [K]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/packet01-parsingroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/packet01-parsing# exit
+[?2004lexit
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ste[K[Ketup [K[Kp [K[K[K[K[K[Kteardown
+[?2004lTearing down environment 'xdptut-669c'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t setp [K[Kip [K[K[Kup [K [K[K[K[K[K[K[K[Kt man ste[K[Ketup
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Use --help to see the list of options.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t --help
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Options:
+-h, --help          Show this usage text
+
+-n, --name <name>   Set name of test environment. If not set, the last used
+                    name will be used, or a new one generated.
+
+-g, --gen-new       Generate a new test environment name even though an existing
+                    environment is selected as the current one.
+
+-l, --loader <prog> Specify program to use for loading XDP programs.
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp-loader'
+
+-s, --stats <prog>  Specify program to use for getting statistics ('stats' command).
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp_stats'
+
+    --legacy-ip     Enable legacy IP (IPv4) support.
+                    For setup and reset commands this enables configuration of legacy
+                    IP addresses on the interface, for the ping command it switches to
+                    legacy ping.
+
+    --vlan          Enable VLAN support.
+                    When used with the setup and reset commands, these VLAN IDs will
+                    be configured: 1 2. The VLAN interfaces are named as
+                    <ifname>.<vlid>.
+                    When used with the ping command, the pings will be sent on the
+                    first VLAN ID (1).
+
+    --inner         Use with tcpdump command to run on inner interface.
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t setup -n testenv-1[K01
+[?2004lSetting up new environment 'testenv-01'
+Setup environment 'testenv-01' with peer ip fc00:dead:cafe:1::2.
+Waiting for interface configuration to settle...
+
+Running ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.054 ms
+
+--- fc00:dead:cafe:1::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.054/0.054/0.054/0.000 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping [7mfc00:dead:cafe:1::2[27mfc00:dead:cafe:1::2
+[?2004lPING fc00:dead:cafe:1::2 (fc00:dead:cafe:1::2) 56 data bytes
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=1 ttl=64 time=0.047 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=2 ttl=64 time=0.032 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=3 ttl=64 time=0.034 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=4 ttl=64 time=0.033 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=5 ttl=64 time=0.036 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=6 ttl=64 time=0.034 ms
+^C
+--- fc00:dead:cafe:1::2 ping statistics ---
+6 packets transmitted, 6 received, 0% packet loss, time 5117ms
+rtt min/avg/max/mdev = 0.032/0.036/0.047/0.005 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping --e[Khelp
+[?2004lping: invalid option -- '-'
+
+Usage
+  ping [options] <destination>
+
+Options:
+  <destination>      DNS name or IP address
+  -a                 use audible ping
+  -A                 use adaptive ping
+  -B                 sticky source address
+  -c <count>         stop after <count> replies
+  -C                 call connect() syscall on socket creation
+  -D                 print timestamps
+  -d                 use SO_DEBUG socket option
+  -e <identifier>    define identifier for ping session, default is random for
+                     SOCK_RAW and kernel defined for SOCK_DGRAM
+                     Imply using SOCK_RAW (for IPv4 only for identifier 0)
+  -f                 flood ping
+  -h                 print help and exit
+  -H                 force reverse DNS name resolution (useful for numeric
+                     destinations or for -f), override -n
+  -I <interface>     either interface name or address
+  -i <interval>      seconds between sending each packet
+  -L                 suppress loopback of multicast packets
+  -l <preload>       send <preload> number of packages while waiting replies
+  -m <mark>          tag the packets going out
+  -M <pmtud opt>     define path MTU discovery, can be one of <do|dont|want|probe>
+  -n                 no reverse DNS name resolution, override -H
+  -O                 report outstanding replies
+  -p <pattern>       contents of padding byte
+  -q                 quiet output
+  -Q <tclass>        use quality of service <tclass> bits
+  -s <size>          use <size> as number of data bytes to be sent
+  -S <size>          use <size> as SO_SNDBUF socket option value
+  -t <ttl>           define time to live
+  -U                 print user-to-user latency
+  -v                 verbose output
+  -V                 print version and exit
+  -w <deadline>      reply wait <deadline> in seconds
+  -W <timeout>       time to wait for response
+
+IPv4 options:
+  -4                 use IPv4
+  -b                 allow pinging broadcast
+  -R                 record route
+  -T <timestamp>     define timestamp, can be one of <tsonly|tsandaddr|tsprespec>
+
+IPv6 options:
+  -6                 use IPv6
+  -F <flowlabel>     define flow label, default is random
+  -N <nodeinfo opt>  use IPv6 node info query, try <help> as argument
+
+For more details see ping(8).
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping --help[K[K[K[K[Kn [7mfc00:dead:cafe:1::2[27m[K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping -n [7mfc00:dead:cafe:1::2[27m[K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping -n [7mfc00:dead:cafe:1::2[27m[K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping -n [7mfc00:dead:cafe:1::2[27mfc00:dead:cafe:1::22fc00:dead:cafe:1::2 fc00:dead:cafe:1::2
+[?2004l
+Usage
+  ping [options] <destination>
+
+Options:
+  <destination>      DNS name or IP address
+  -a                 use audible ping
+  -A                 use adaptive ping
+  -B                 sticky source address
+  -c <count>         stop after <count> replies
+  -C                 call connect() syscall on socket creation
+  -D                 print timestamps
+  -d                 use SO_DEBUG socket option
+  -e <identifier>    define identifier for ping session, default is random for
+                     SOCK_RAW and kernel defined for SOCK_DGRAM
+                     Imply using SOCK_RAW (for IPv4 only for identifier 0)
+  -f                 flood ping
+  -h                 print help and exit
+  -H                 force reverse DNS name resolution (useful for numeric
+                     destinations or for -f), override -n
+  -I <interface>     either interface name or address
+  -i <interval>      seconds between sending each packet
+  -L                 suppress loopback of multicast packets
+  -l <preload>       send <preload> number of packages while waiting replies
+  -m <mark>          tag the packets going out
+  -M <pmtud opt>     define path MTU discovery, can be one of <do|dont|want|probe>
+  -n                 no reverse DNS name resolution, override -H
+  -O                 report outstanding replies
+  -p <pattern>       contents of padding byte
+  -q                 quiet output
+  -Q <tclass>        use quality of service <tclass> bits
+  -s <size>          use <size> as number of data bytes to be sent
+  -S <size>          use <size> as SO_SNDBUF socket option value
+  -t <ttl>           define time to live
+  -U                 print user-to-user latency
+  -v                 verbose output
+  -V                 print version and exit
+  -w <deadline>      reply wait <deadline> in seconds
+  -W <timeout>       time to wait for response
+
+IPv4 options:
+  -4                 use IPv4
+  -b                 allow pinging broadcast
+  -R                 record route
+  -T <timestamp>     define timestamp, can be one of <tsonly|tsandaddr|tsprespec>
+
+IPv6 options:
+  -6                 use IPv6
+  -F <flowlabel>     define flow label, default is random
+  -N <nodeinfo opt>  use IPv6 node info query, try <help> as argument
+
+For more details see ping(8).
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping -n 2 fc00:dead:cafe:1::2
+[?2004l
+Usage
+  ping [options] <destination>
+
+Options:
+  <destination>      DNS name or IP address
+  -a                 use audible ping
+  -A                 use adaptive ping
+  -B                 sticky source address
+  -c <count>         stop after <count> replies
+  -C                 call connect() syscall on socket creation
+  -D                 print timestamps
+  -d                 use SO_DEBUG socket option
+  -e <identifier>    define identifier for ping session, default is random for
+                     SOCK_RAW and kernel defined for SOCK_DGRAM
+                     Imply using SOCK_RAW (for IPv4 only for identifier 0)
+  -f                 flood ping
+  -h                 print help and exit
+  -H                 force reverse DNS name resolution (useful for numeric
+                     destinations or for -f), override -n
+  -I <interface>     either interface name or address
+  -i <interval>      seconds between sending each packet
+  -L                 suppress loopback of multicast packets
+  -l <preload>       send <preload> number of packages while waiting replies
+  -m <mark>          tag the packets going out
+  -M <pmtud opt>     define path MTU discovery, can be one of <do|dont|want|probe>
+  -n                 no reverse DNS name resolution, override -H
+  -O                 report outstanding replies
+  -p <pattern>       contents of padding byte
+  -q                 quiet output
+  -Q <tclass>        use quality of service <tclass> bits
+  -s <size>          use <size> as number of data bytes to be sent
+  -S <size>          use <size> as SO_SNDBUF socket option value
+  -t <ttl>           define time to live
+  -U                 print user-to-user latency
+  -v                 verbose output
+  -V                 print version and exit
+  -w <deadline>      reply wait <deadline> in seconds
+  -W <timeout>       time to wait for response
+
+IPv4 options:
+  -4                 use IPv4
+  -b                 allow pinging broadcast
+  -R                 record route
+  -T <timestamp>     define timestamp, can be one of <tsonly|tsandaddr|tsprespec>
+
+IPv6 options:
+  -6                 use IPv6
+  -F <flowlabel>     define flow label, default is random
+  -N <nodeinfo opt>  use IPv6 node info query, try <help> as argument
+
+For more details see ping(8).
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ping -n 2 fc00:dead:cafe:1::2[C[1P fc00:dead:cafe:1::2[1Pfc00:dead:cafe:1::2[1P fc00:dead:cafe:1::2[1P fc00:dead:cafe:1::2[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Pfc00:dead:cafe:1::2-fc00:dead:cafe:1::2cfc00:dead:cafe:1::2 fc00:dead:cafe:1::22fc00:dead:cafe:1::2 fc00:dead:cafe:1::2
+[?2004lPING fc00:dead:cafe:1::2 (fc00:dead:cafe:1::2) 56 data bytes
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=1 ttl=64 time=0.050 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=2 ttl=64 time=0.038 ms
+
+--- fc00:dead:cafe:1::2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1025ms
+rtt min/avg/max/mdev = 0.038/0.044/0.050/0.006 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload
+[?2004l[sudo] password for xainecks: 
+Need prog ID or --all
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload -all
+[?2004lgetopt: invalid option -- 'a'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unlaod [K[K[K[Koad --unload-all
+[?2004lgetopt: unrecognized option '--unload-all'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload --unload-all[C[1P--unload-all[1P--unload-all[1P--unload-all[1P--unload-all[1P--unload-all[1P--unload-all[1P--unload-all
+[?2004lgetopt: unrecognized option '--unload-all'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload testenv-01
+[?2004l
+Usage: xdp-loader unload [options] <ifname>
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ st[K s[K[K[Kt status
+[?2004lCurrently selected environment: testenv-01
+  Namespace:      testenv-01 (id: 0)
+  Prefix:         fc00:dead:cafe:1::/64
+  Iface:          testenv-01@if2 UP fc00:dead:cafe:1::1/64 fe80::541e:f0ff:fec6:3d7e/64 
+
+All existing environments:
+  testenv-01
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t list
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Use --help to see the list of options.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t enter
+[?2004l[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/packet01-parsingroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/packet01-parsing# ping - c[K[Kc [K[K[K
+[?2004lping: usage error: Destination address required
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/packet01-parsingroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/packet01-parsing# ping -c 1 [K[K[K[K[K[K[K[K[K[K[7mping -c 2 fc00:dead:cafe:1::2[27mping -c 2 fc00:dead:cafe:1::2
+[?2004lPING fc00:dead:cafe:1::2 (fc00:dead:cafe:1::2) 56 data bytes
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=1 ttl=64 time=0.056 ms
+64 bytes from fc00:dead:cafe:1::2: icmp_seq=2 ttl=64 time=0.028 ms
+
+--- fc00:dead:cafe:1::2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1003ms
+rtt min/avg/max/mdev = 0.028/0.042/0.056/0.014 ms
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/packet01-parsingroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/packet01-parsing# exit
+[?2004lexit
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ping [K[K[K[K[K[7mping -c 2 fc00:dead:cafe:1::2[27mping -c 2 fc00:dead:cafe:1::2
+[?2004lgetopt: invalid option -- 'c'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ping -c 2 fc00:dead:cafe:1::2[1P fc00:dead:cafe:1::2[1Pfc00:dead:cafe:1::2[1P fc00:dead:cafe:1::2[1P fc00:dead:cafe:1::2[1Pfc00:dead:cafe:1::2
+[?2004lRunning ping from inside test environment:
+
+
+Usage
+  ping [options] <destination>
+
+Options:
+  <destination>      DNS name or IP address
+  -a                 use audible ping
+  -A                 use adaptive ping
+  -B                 sticky source address
+  -c <count>         stop after <count> replies
+  -C                 call connect() syscall on socket creation
+  -D                 print timestamps
+  -d                 use SO_DEBUG socket option
+  -e <identifier>    define identifier for ping session, default is random for
+                     SOCK_RAW and kernel defined for SOCK_DGRAM
+                     Imply using SOCK_RAW (for IPv4 only for identifier 0)
+  -f                 flood ping
+  -h                 print help and exit
+  -H                 force reverse DNS name resolution (useful for numeric
+                     destinations or for -f), override -n
+  -I <interface>     either interface name or address
+  -i <interval>      seconds between sending each packet
+  -L                 suppress loopback of multicast packets
+  -l <preload>       send <preload> number of packages while waiting replies
+  -m <mark>          tag the packets going out
+  -M <pmtud opt>     define path MTU discovery, can be one of <do|dont|want|probe>
+  -n                 no reverse DNS name resolution, override -H
+  -O                 report outstanding replies
+  -p <pattern>       contents of padding byte
+  -q                 quiet output
+  -Q <tclass>        use quality of service <tclass> bits
+  -s <size>          use <size> as number of data bytes to be sent
+  -S <size>          use <size> as SO_SNDBUF socket option value
+  -t <ttl>           define time to live
+  -U                 print user-to-user latency
+  -v                 verbose output
+  -V                 print version and exit
+  -w <deadline>      reply wait <deadline> in seconds
+  -W <timeout>       time to wait for response
+
+IPv4 options:
+  -4                 use IPv4
+  -b                 allow pinging broadcast
+  -R                 record route
+  -T <timestamp>     define timestamp, can be one of <tsonly|tsandaddr|tsprespec>
+
+IPv6 options:
+  -6                 use IPv6
+  -F <flowlabel>     define flow label, default is random
+  -N <nodeinfo opt>  use IPv6 node info query, try <help> as argument
+
+For more details see ping(8).
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ r [K[Kt help
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Options:
+-h, --help          Show this usage text
+
+-n, --name <name>   Set name of test environment. If not set, the last used
+                    name will be used, or a new one generated.
+
+-g, --gen-new       Generate a new test environment name even though an existing
+                    environment is selected as the current one.
+
+-l, --loader <prog> Specify program to use for loading XDP programs.
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp-loader'
+
+-s, --stats <prog>  Specify program to use for getting statistics ('stats' command).
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp_stats'
+
+    --legacy-ip     Enable legacy IP (IPv4) support.
+                    For setup and reset commands this enables configuration of legacy
+                    IP addresses on the interface, for the ping command it switches to
+                    legacy ping.
+
+    --vlan          Enable VLAN support.
+                    When used with the setup and reset commands, these VLAN IDs will
+                    be configured: 1 2. The VLAN interfaces are named as
+                    <ifname>.<vlid>.
+                    When used with the ping command, the pings will be sent on the
+                    first VLAN ID (1).
+
+    --inner         Use with tcpdump command to run on inner interface.
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ping
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.024 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=2 ttl=64 time=0.032 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=3 ttl=64 time=0.032 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=4 ttl=64 time=0.036 ms
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3085ms
+rtt min/avg/max/mdev = 0.024/0.031/0.036/0.004 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ping -c 2
+[?2004lgetopt: invalid option -- 'c'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t ping -c 2[K[K
+[?2004lgetopt: invalid option -- 'c'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load
+[?2004l/home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh: line 454: $#-1: substring expression < 0
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load ls[Kt load make 
+[?2004lCouldn't open file 'make': No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make clean
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make
+[?2004l    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load
+[?2004l/home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh: line 454: $#-1: substring expression < 0
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ip link 
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp8s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 10:7c:61:77:cd:8c brd ff:ff:ff:ff:ff:ff
+5: testenv-01@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 56:1e:f0:c6:3d:7e brd ff:ff:ff:ff:ff:ff link-netns testenv-01
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7mip link [27m[1Pip link[K[K[K[K[K[K[K[7msudo xdp-loader load -m skb testenv-01@if2 xdp_prog_kern.o[27msudo xdp-loader load -m skb testenv-01@if2 xdp_prog_kern.o
+[?2004l[sudo] password for xainecks: 
+Couldn't find network interface 'testenv-01@if2'.
+
+Usage: xdp-loader load [options] <ifname> <filenames>
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo xdp-loader load -m skb testenv-01@if2 xdp_prog_kern.o[1P xdp_prog_kern.o[1P xdp_prog_kern.o[1P xdp_prog_kern.o[1P xdp_prog_kern.o
+[?2004lCouldn't attach XDP program on iface 'testenv-01': Permission denied(-13)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ip netns exec testenv-01 xdp-loader load -m skb testenv-01 xdp_prog_kern.o[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ip netns exec testenv-01 xdp-loader load -m skb testenv-01 xdp_prog_kern.o
+[?2004l[sudo] password for xainecks: 
+Couldn't find network interface 'testenv-01'.
+
+Usage: xdp-loader load [options] <ifname> <filenames>
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ip link
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp8s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 10:7c:61:77:cd:8c brd ff:ff:ff:ff:ff:ff
+5: testenv-01@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 56:1e:f0:c6:3d:7e brd ff:ff:ff:ff:ff:ff link-netns testenv-01
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ip linksudo ip netns exec testenv-01 xdp-loader load -m skb testenv-01 xdp_prog_kern.o[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K
+[?2004lNo command specified
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ip netns exec testenv-01 \[27m
+[7m  xdp-loader load -m skb testenv-01 xdp_prog_kern.o[27m
+[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ip netns exec testenv-01 \
+  xdp-loader load -m skb testenv-01 xdp_prog_kern.o
+[A
+[?2004lCouldn't find network interface 'testenv-01'.
+
+Usage: xdp-loader load [options] <ifname> <filenames>
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ip netns exec testenv-01 ip link[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ip netns exec testenv-01 ip link
+[A
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: veth0@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 26:8e:21:40:a7:7f brd ff:ff:ff:ff:ff:ff link-netnsid 0
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ip netns exec testenv-01 xdp-loader load -m skb veth0 xdp_prog_kern.o[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ip netns exec testenv-01 xdp-loader load -m skb veth0 xdp_prog_kern.o
+[?2004l libxdp: No bpffs found at /sys/fs/bpf
+ libxdp: Can't use dispatcher without a working bpffs
+Couldn't attach XDP program on iface 'veth0': Permission denied(-13)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo .[K[K[K[K[K[Kls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ./xdp_loader --dev veth-basic02 --unload-all[27msudo ./xdp_loader --dev veth-basic02 --unload-all
+[?2004lsudo: ./xdp_loader: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make clean
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make
+[?2004l    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ lsmake clean[Ksudo ./xdp_loader --dev veth-basic02 --unload-all'[K
+[?2004lsudo: ./xdp_loader: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp_loader --dev veth-basic02 --unload-all[K./xdp_loader
+[?2004lbash: ./xdp_loader: No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ xdo[Kp_[K_;[Kloader
+[?2004lCommand 'xdp_loader' not found, did you mean:
+  command 'xdp-loader' from deb xdp-tools (1.3.0-2ubuntu2)
+Try: sudo apt install <deb name>
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo .[K./xdp_stats 
+Makefile         README.org       xdp-loader       xdp_prog_kern.c  xdp_prog_kern.o  xdp_stats        
+]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp_stats [K[K[K[K[K[Kl[K[K-loader 
+[?2004lUsage: xdp-loader COMMAND [options]
+
+COMMAND can be one of:
+       load        - load an XDP program on an interface
+       unload      - unload an XDP program from an interface
+       status      - show current XDP program status
+       clean       - clean up detached program links in XDP bpffs directory
+       features    - show XDP features supported by the NIC
+       help        - show this help message
+
+Use 'xdp-loader COMMAND --help' to see options for each command
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp-loader --help
+[?2004lCommand '--help' is unknown, try 'xdp-loader help'.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp-loader --help[K[K[K[K[K[Khelp
+[?2004lUsage: xdp-loader COMMAND [options]
+
+COMMAND can be one of:
+       load        - load an XDP program on an interface
+       unload      - unload an XDP program from an interface
+       status      - show current XDP program status
+       clean       - clean up detached program links in XDP bpffs directory
+       features    - show XDP features supported by the NIC
+       help        - show this help message
+
+Use 'xdp-loader COMMAND --help' to see options for each command
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ./xdp_loader --dev veth-basic02 --unload-all[27msudo ./xdp_loader --dev veth-basic02 --unload-all[C[1P[1@-
+[?2004lCommand '--dev' is unknown, try 'xdp-loader help'.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp-loader --dev veth-basic02 --unload-all[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Ktestenv-1[K01
+[?2004lCommand 'testenv-01' is unknown, try 'xdp-loader help'.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp-loader testenv-01ltestenv-01otestenv-01atestenv-01dtestenv-01 testenv-01
+[?2004lMissing required parameter <filenames>
+
+Usage: xdp-loader [options] <ifname> <filenames>
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo ./xdp-loader load testenv-01[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[7msudo xdp-loader load -m skb lo xdp_pass_kern.o[27msudo xdp-loader load -m skb lo xdp_pass_kern.o
+[?2004lCouldn't open file 'xdp_pass_kern.o': No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp-loader[0m  xdp_prog_kern.c  xdp_prog_kern.o  [01;32mxdp_stats[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ lssudo xdp-loader load -m skb lo xdp_pass_kern.o[C[1P_kern.o[1P_kern.o[1P_kern.op_kern.o[1P_kern.or_kern.oo_kern.og_kern.o
+[?2004lCouldn't attach XDP program on iface 'lo': Permission denied(-13)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ sudo xdp-loader load -m skb lo xdp_prog_kern.o[1P xdp_prog_kern.o[1P xdp_prog_kern.ot xdp_prog_kern.oe xdp_prog_kern.os xdp_prog_kern.ot xdp_prog_kern.o_ xdp_prog_kern.o[1P xdp_prog_kern.oe xdp_prog_kern.ov xdp_prog_kern.o[1P xdp_prog_kern.on xdp_prog_kern.ov xdp_prog_kern.o- xdp_prog_kern.o0 xdp_prog_kern.o1 xdp_prog_kern.o
+[?2004lCouldn't attach XDP program on iface 'testenv-01': Permission denied(-13)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load
+[?2004l/home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh: line 454: $#-1: substring expression < 0
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t je[K[Khelp
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Options:
+-h, --help          Show this usage text
+
+-n, --name <name>   Set name of test environment. If not set, the last used
+                    name will be used, or a new one generated.
+
+-g, --gen-new       Generate a new test environment name even though an existing
+                    environment is selected as the current one.
+
+-l, --loader <prog> Specify program to use for loading XDP programs.
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp-loader'
+
+-s, --stats <prog>  Specify program to use for getting statistics ('stats' command).
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp_stats'
+
+    --legacy-ip     Enable legacy IP (IPv4) support.
+                    For setup and reset commands this enables configuration of legacy
+                    IP addresses on the interface, for the ping command it switches to
+                    legacy ping.
+
+    --vlan          Enable VLAN support.
+                    When used with the setup and reset commands, these VLAN IDs will
+                    be configured: 1 2. The VLAN interfaces are named as
+                    <ifname>.<vlid>.
+                    When used with the ping command, the pings will be sent on the
+                    first VLAN ID (1).
+
+    --inner         Use with tcpdump command to run on inner interface.
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ man t
+[?2004lNo manual entry for t
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ man[K[K[Kt[Kman t load
+[?2004lNo manual entry for t
+No manual entry for load
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t lod[Kad -h
+[?2004lUsage: /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Options:
+-h, --help          Show this usage text
+
+-n, --name <name>   Set name of test environment. If not set, the last used
+                    name will be used, or a new one generated.
+
+-g, --gen-new       Generate a new test environment name even though an existing
+                    environment is selected as the current one.
+
+-l, --loader <prog> Specify program to use for loading XDP programs.
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp-loader'
+
+-s, --stats <prog>  Specify program to use for getting statistics ('stats' command).
+                    Device name will be passed to it, along with any additional
+                    command line options passed after --.
+                    Default: './xdp_stats'
+
+    --legacy-ip     Enable legacy IP (IPv4) support.
+                    For setup and reset commands this enables configuration of legacy
+                    IP addresses on the interface, for the ping command it switches to
+                    legacy ping.
+
+    --vlan          Enable VLAN support.
+                    When used with the setup and reset commands, these VLAN IDs will
+                    be configured: 1 2. The VLAN interfaces are named as
+                    <ifname>.<vlid>.
+                    When used with the ping command, the pings will be sent on the
+                    first VLAN ID (1).
+
+    --inner         Use with tcpdump command to run on inner interface.
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t [K laod [K[K[K[Koad xdp[K[K[K[7mxdp_prog_kern.o[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cxdp_prog_kern.o
+[A
+[?2004lCouldn't attach XDP program on iface 'testenv-01': Permission denied(-13)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load xdp_prog_kern.o
+[?2004l[sudo] password for xainecks: 
+Couldn't attach XDP program on iface 'testenv-01': Permission denied(-13)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ makec[K c[K
+[?2004l    CLANG    xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ make t load xdp_prog_kern.o
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t load xdp_prog_kern.o[1@u[1@n
+[?2004lCouldn't find network interface 'xdp_prog_kern.o'.
+
+Usage: xdp-loader unload [options] <ifname>
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ tp [K[K teardown
+[?2004lTearing down environment 'testenv-01'
+rmdir: failed to remove '/sys/fs/bpf/testenv-01': Directory not empty
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload 
+[?2004lNo environment selected; use --name to select one or 'setup' to create one
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload test-[Kenv-01
+[?2004lNo environment selected; use --name to select one or 'setup' to create one
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload testenv-01-testenv-01-testenv-01ntestenv-01atestenv-01mtestenv-01etestenv-01 testenv-01
+[?2004lEnvironment for testenv-01 doesn't seem to exist
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ t unload --name testenv-01[7Ptestenv-01[Kteardownunload xdp_prog_kern.o[14Pteardown
+[?2004lNo environment selected; use --name to select one or 'setup' to create one
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo rm -rf /sys/fs/bpf/testenv-01[27msudo rm -rf /sys/fs/bpf/testenv-01
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ [7msudo ip netns delete testenv-01[27msudo ip netns delete testenv-01
+[?2004lCannot remove namespace file "/run/netns/testenv-01": No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/packet01-parsing[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/packet01-parsing[00m$ scei[K[Kript [K[K[K[K[K[K[Kexit
+[?2004lexit
+
+Script done on 2026-01-20 06:39:20+05:00 [COMMAND_EXIT_CODE="1"]

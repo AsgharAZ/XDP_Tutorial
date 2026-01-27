@@ -1,0 +1,752 @@
+Script started on 2026-01-15 20:18:31+05:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/SCRIPTS[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/SCRIPTS[00m$ cd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ ls
+[?2004l[0m[01;34mSCRIPTS[0m  [01;34mxdp-tutorial[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ cd xdp-tutorial/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd basic_[K0[K[K[K[K[K[K[K[K[Kls
+[?2004l[0m[01;34madvanced01-xdp-tc-interact[0m  [01;32mconfigure[0m              README.org
+[01;34madvanced03-AF_XDP[0m           [01;34mexperiment01-tailgrow[0m  setup_dependencies.org
+[01;34mbasic01-xdp-pass[0m            [01;34minstall[0m                [01;34msetup-testlab[0m
+[01;34mbasic02-prog-by-name[0m        [01;34mlib[0m                    [01;34mtestenv[0m
+[01;34mbasic03-map-counter[0m         Makefile               [01;34mtracing01-xdp-simple[0m
+[01;34mbasic04-pinning-maps[0m        [01;34mpacket01-parsing[0m       [01;34mtracing02-xdp-monitor[0m
+[01;34mbasic-solutions[0m             [01;34mpacket02-rewriting[0m     [01;34mtracing03-xdp-debug-print[0m
+[01;34mcommon[0m                      [01;34mpacket03-redirecting[0m   [01;34mtracing04-xdp-tcpdump[0m
+config.mk                   [01;34mpacket-solutions[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd basic01-xdp-pass/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ ls
+[?2004lMakefile    xdp_pass_kern.c  [0m[01;32mxdp_pass_user[0m
+README.org  xdp_pass_kern.o  xdp_pass_user.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ less xdp_pass_user.c
+[?2004l[?1049h[22;0;0t[?1h=/* SPDX-License-Identifier: GPL-2.0 */
+static const char *__doc__ = "Simple XDP prog doing XDP_PASS\n";
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <getopt.h>
+
+#include <linux/bpf.h>
+#include <bpf/bpf.h>
+#include <bpf/libbpf.h>
+#include <xdp/libxdp.h>
+
+#include <net/if.h>
+#include <linux/if_link.h> /* depend on kernel-headers installed */
+
+#include "../common/common_params.h"
+#include "../common/common_user_bpf_xdp.h"
+
+static const struct option_wrapper long_options[] = {
+        {{"help",        no_argument,           NULL, 'h' },
+         "Show help", false},
+[7mxdp_pass_user.c[27m[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"dev",         required_argument,     NULL, 'd' },
+:[K[K [KESCESC[KOO[KBB[K         "Operate on device <ifname>", "<ifname>", true},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"skb-mode",    no_argument,           NULL, 'S' },
+:[K[K [KESCESC[KOO[KBB[K         "Install XDP program in SKB (AKA generic) mode"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"native-mode", no_argument,           NULL, 'N' },
+:[K[K [KESCESC[KOO[KBB[K         "Install XDP program in native mode"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"auto-mode",   no_argument,           NULL, 'A' },
+:[K[K [KESCESC[KOO[KBB[K         "Auto-detect SKB or native mode"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"unload",      required_argument,     NULL, 'U' },
+:[K[K [KESCESC[KOO[KBB[K         "Unload XDP program <id> instead of loading", "<id>"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"unload-all",  no_argument,           NULL,  4  },
+:[K[K [KESCESC[KOO[KBB[K         "Unload all XDP programs on device"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{0, 0, NULL,  0 }, NULL, false}
+:[K[K [KESCESC[KOO[KBB[K};
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[Kint main(int argc, char **argv)
+:[K[K [KESCESC[KOO[KBB[K{
+:[K[K [KESCESC[KOO[KBB[K        struct bpf_prog_info info = {};
+:[K[K [KESCESC[KOO[KBB[K        __u32 info_len = sizeof(info);
+:[K[K [KESCESC[KOO[KBB[K        char filename[] = "xdp_pass_kern.o";
+:[K[K [KESCESC[KOO[KBB[K        char progname[] = "xdp_prog_simple";
+:[K[K [KESCESC[KOO[KBB[K        struct xdp_program *prog;
+:[K[K [KESCESC[KOO[KBB[K        char errmsg[1024];
+:[K[K [KESCESC[KOO[KBB[K        int prog_fd, err; // = EXIT_SUCCESS;
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        struct config cfg = {
+:[K[K [KESCESC[KOO[KBB[K                .attach_mode = XDP_MODE_UNSPEC,
+:[K[K [KESCESC[KOO[KBB[K                .ifindex   = -1,
+:[K[K [KESCESC[KOO[KBB[K                .do_unload = false,
+:[K[K [KESCESC[KOO[KBB[K        };
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        DECLARE_LIBBPF_OPTS(bpf_object_open_opts, bpf_opts);
+:[K[K [KESCESC[KOO[KBB[K        DECLARE_LIBXDP_OPTS(xdp_program_opts, xdp_opts,
+:[K[K [KESCESC[KOO[KBB[K                            .open_filename = filename,
+:[K[K [KESCESC[KOO[KBB[K                            .prog_name = progname,
+:[K[K [KESCESC[KOO[KBB[K                            .opts = &bpf_opts);
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        parse_cmdline_args(argc, argv, long_options, &cfg, __doc__);
+:[K[K [KESCESC[KOO[KBB[K        /* Required option */
+:[K[K [KESCESC[KOO[KBB[K        if (cfg.ifindex == -1) {
+:[K[K [KESCESC[KOO[KAA[K[HM{
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HMint main(int argc, char **argv)
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM};
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{0, 0, NULL,  0 }, NULL, false}
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Unload all XDP programs on device"},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"unload-all",  no_argument,           NULL,  4  },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Unload XDP program <id> instead of loading", "<id>"},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"unload",      required_argument,     NULL, 'U' },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Auto-detect SKB or native mode"},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"auto-mode",   no_argument,           NULL, 'A' },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Install XDP program in native mode"},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"native-mode", no_argument,           NULL, 'N' },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Install XDP program in SKB (AKA generic) mode"},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"skb-mode",    no_argument,           NULL, 'S' },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Operate on device <ifname>", "<ifname>", true},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"dev",         required_argument,     NULL, 'd' },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM         "Show help", false},
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM        {{"help",        no_argument,           NULL, 'h' },
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HMstatic const struct option_wrapper long_options[] = {
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include "../common/common_user_bpf_xdp.h"
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include "../common/common_params.h"
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <linux/if_link.h> /* depend on kernel-headers installed */
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <net/if.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <xdp/libxdp.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <bpf/libbpf.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <bpf/bpf.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <linux/bpf.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <getopt.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <errno.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <string.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <stdlib.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM#include <stdio.h>
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HMstatic const char *__doc__ = "Simple XDP prog doing XDP_PASS\n";
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[HM/* SPDX-License-Identifier: GPL-2.0 */
+[24;1H[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KAA[K[K:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"dev",         required_argument,     NULL, 'd' },
+:[K[K [KESCESC[KOO[KBB[K         "Operate on device <ifname>", "<ifname>", true},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"skb-mode",    no_argument,           NULL, 'S' },
+:[K[K [KESCESC[KOO[KBB[K         "Install XDP program in SKB (AKA generic) mode"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"native-mode", no_argument,           NULL, 'N' },
+:[K[K [KESCESC[KOO[KBB[K         "Install XDP program in native mode"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"auto-mode",   no_argument,           NULL, 'A' },
+:[K[K [KESCESC[KOO[KBB[K         "Auto-detect SKB or native mode"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"unload",      required_argument,     NULL, 'U' },
+:[K[K [KESCESC[KOO[KBB[K         "Unload XDP program <id> instead of loading", "<id>"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{"unload-all",  no_argument,           NULL,  4  },
+:[K[K [KESCESC[KOO[KBB[K         "Unload all XDP programs on device"},
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        {{0, 0, NULL,  0 }, NULL, false}
+:[K[K [KESCESC[KOO[KBB[K};
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[Kint main(int argc, char **argv)
+:[K[K [KESCESC[KOO[KBB[K{
+:[K[K [KESCESC[KOO[KBB[K        struct bpf_prog_info info = {};
+:[K[K [KESCESC[KOO[KBB[K        __u32 info_len = sizeof(info);
+:[K[K [KESCESC[KOO[KBB[K        char filename[] = "xdp_pass_kern.o";
+:[K[K [KESCESC[KOO[KBB[K        char progname[] = "xdp_prog_simple";
+:[K[K [KESCESC[KOO[KBB[K        struct xdp_program *prog;
+:[K[K [KESCESC[KOO[KBB[K        char errmsg[1024];
+:[K[K [KESCESC[KOO[KBB[K        int prog_fd, err; // = EXIT_SUCCESS;
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        struct config cfg = {
+:[K[K [KESCESC[KOO[KBB[K                .attach_mode = XDP_MODE_UNSPEC,
+:[K[K [KESCESC[KOO[KBB[K                .ifindex   = -1,
+:[K[K [KESCESC[KOO[KBB[K                .do_unload = false,
+:[K[K [KESCESC[KOO[KBB[K        };
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        DECLARE_LIBBPF_OPTS(bpf_object_open_opts, bpf_opts);
+:[K[K [KESCESC[KOO[KBB[K        DECLARE_LIBXDP_OPTS(xdp_program_opts, xdp_opts,
+:[K[K [KESCESC[KOO[KBB[K                            .open_filename = filename,
+:[K[K [KESCESC[KOO[KBB[K                            .prog_name = progname,
+:[K[K [KESCESC[KOO[KBB[K                            .opts = &bpf_opts);
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        parse_cmdline_args(argc, argv, long_options, &cfg, __doc__);
+:[K[K [KESCESC[KOO[KBB[K        /* Required option */
+:[K[K [KESCESC[KOO[KBB[K        if (cfg.ifindex == -1) {
+:[K[K [KESCESC[KOO[KBB[K                fprintf(stderr, "ERR: required option --dev missing\n");
+:[K[K [KESCESC[KOO[KBB[K                usage(argv[0], __doc__, long_options, (argc == 1));
+:[K[K [KESCESC[KOO[KBB[K                return EXIT_FAIL_OPTION;
+:[K[K [KESCESC[KOO[KBB[K        }
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        /* Unload a program by prog_id, or
+:[K[K [KESCESC[KOO[KBB[K         * unload all programs on net device
+:[K[K [KESCESC[KOO[KBB[K         */
+:[K[K [KESCESC[KOO[KBB[K        if (cfg.do_unload || cfg.unload_all) {
+:[K[K [KESCESC[KOO[KBB[K                err = do_unload(&cfg);
+:[K[K [KESCESC[KOO[KBB[K                if (err) {
+:[K[K [KESCESC[KOO[KBB[K                        libxdp_strerror(err, errmsg, sizeof(errmsg));
+:[K[K [KESCESC[KOO[KBB[K                        fprintf(stderr, "Couldn't unload XDP program %s: %s\n",
+:[K[K [KESCESC[KOO[KBB[K                                progname, errmsg);
+:[K[K [KESCESC[KOO[KBB[K                        return err;
+:[K[K [KESCESC[KOO[KBB[K                }
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K                printf("Success: Unloading XDP prog name: %s\n", progname);
+:[K[K [KESCESC[KOO[KBB[K                return EXIT_OK;
+:[K[K [KESCESC[KOO[KBB[K        }
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        /* Create an xdp_program froma a BPF ELF object file */
+:[K[K [KESCESC[KOO[KBB[K        prog = xdp_program__create(&xdp_opts);
+:[K[K [KESCESC[KOO[KBB[K        err = libxdp_get_error(prog);
+:[K[K [KESCESC[KOO[KBB[K        if (err) {
+:[K[K [KESCESC[KOO[KBB[K                libxdp_strerror(err, errmsg, sizeof(errmsg));
+:[K[K [KESCESC[KOO[KBB[K                fprintf(stderr, "Couldn't get XDP program %s: %s\n",
+:[K[K [KESCESC[KOO[KBB[K                        progname, errmsg);
+:[K[K [KESCESC[KOO[KBB[K                return err;
+:[K[K [KESCESC[KOO[KBB[K        }
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        /* Attach the xdp_program to the net device XDP hook */
+:[K[K [KESCESC[KOO[KBB[K        err = xdp_program__attach(prog, cfg.ifindex, cfg.attach_mode, 0);
+:[K[K [KESCESC[KOO[KBB[K        if (err) {
+:[K[K [KESCESC[KOO[KBB[K                libxdp_strerror(err, errmsg, sizeof(errmsg));
+:[K[K [KESCESC[KOO[KBB[K                fprintf(stderr, "Couldn't attach XDP program on iface '%s' : %s  :[K[K [KESCESC[KOO[KBB[K(%d)\n",
+:[K[K [KESCESC[KOO[KBB[K                        cfg.ifname, errmsg, err);
+:[K[K [KESCESC[KOO[KBB[K                return err;
+:[K[K [KESCESC[KOO[KBB[K        }
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        /* This step is not really needed , BPF-info via bpf-syscall */
+:[K[K [KESCESC[KOO[KBB[K        prog_fd = xdp_program__fd(prog);
+:[K[K [KESCESC[KOO[KBB[K        err = bpf_obj_get_info_by_fd(prog_fd, &info, &info_len);
+:[K[K [KESCESC[KOO[KBB[K        if (err) {
+:[K[K [KESCESC[KOO[KBB[K                fprintf(stderr, "ERR: can't get prog info - %s\n",
+:[K[K [KESCESC[KOO[KBB[K                        strerror(errno));
+:[K[K [KESCESC[KOO[KBB[K                return err;
+:[K[K [KESCESC[KOO[KBB[K        }
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K        printf("Success: Loading "
+:[K[K [KESCESC[KOO[KBB[K               "XDP prog name:%s(id:%d) on device:%s(ifindex:%d)\n",
+:[K[K [KESCESC[KOO[KBB[K               info.name, info.id, cfg.ifname, cfg.ifindex);
+:[K[K [KESCESC[KOO[KBB[K        return EXIT_OK;
+:[K[K [KESCESC[KOO[KBB[K}
+[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K[?1l>[?1049l[23;0;0t[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ less xdp_pass_user.c[1P.c[1P.c[1P.c[1P.ck.ce.cr.cn.c
+[?2004l[?1049h[22;0;0t[?1h=/* SPDX-License-Identifier: GPL-2.0 */
+#include <linux/bpf.h>
+#include <bpf/bpf_helpers.h>
+
+SEC("xdp")
+int  xdp_prog_simple(struct xdp_md *ctx)
+{
+        return XDP_PASS;
+}
+
+char _license[] SEC("license") = "GPL";
+[7mxdp_pass_kern.c (END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K [KESCESC[KOO[KBB[K[K[7m(END)[27m[K[K[?1l>[?1049l[23;0;0t[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ ^[[200~llvm-objdump -S xdp_pass_kern.o~[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[7mllvm-objdump -S xdp_p[27m[7ma[27m[7mss_kern.o[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ llvm-objdump -S xdp_pass_kern.o
+[?2004l
+xdp_pass_kern.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <xdp_prog_simple>:
+; 	return XDP_PASS;
+       0:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       1:	95 00 00 00 00 00 00 00	exit
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ipli[K[K link set dev  lo xdpgeneric obj xdp_pass_kern.o sec xdp
+[?2004l[sudo] password for xainecks: 
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ip link show dve [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[Kdev  lo
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 xdpgeneric qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    prog/xdp id 92 name xdp_prog_simple tag 3b185187f1855c4c jited 
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [7msudo ./xdp_pass_user [27m[7m-[27m[7m-dev lo --unload-all[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo --unload-all
+[?2004l[sudo] password for xainecks: 
+Success: Unloading XDP prog name: xdp_prog_simple
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo --unload-all[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[Cip link show dev lo[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[Cet dev lo xdpgeneric obj xdp_pass_kern.o sec xdp[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ llvm-objdump -S xdp_pass_kern.o[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[1Pess xdp_pass_kern.c
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cuser.cs[Kcd basic01-xdp-pass/ls[Kess xdp_pass_user.ckern.clvm-objdump -S xdp_pass_kern.o[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ip link set dev lo xdpgeneric obj xdp_pass_kern.o sec xdp[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[Chow dev lo[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C./xdp_pass_user --dev lo --unload-all[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[Cip link show dev lo[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[Cet dev lo xdpgeneric obj xdp_pass_kern.o sec xdp[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ llvm-objdump -S xdp_pass_kern.o[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[1Pess xdp_pass_kern.c
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Clvm-objdump -S xdp_pass_kern.o[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ip link set dev lo xdpgeneric obj xdp_pass_kern.o sec xdp[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[Chow dev lo[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C./xdp_pass_user --dev lo --unload-all[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C^[[200~sudo ./xdp_pass_user --dev lo~[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[7msudo ./xdp_pass_user [27m[7m-[27m[7m-dev lo[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo
+[?2004llibbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loading XDP prog name:xdp_prog_simple(id:113) on device:lo(ifindex:1)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo
+[?2004llibbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loading XDP prog name:xdp_prog_simple(id:133) on device:lo(ifindex:1)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo[K[K[K[K[K[K[K[Kstatus lo
+[?2004lERR: required option --dev missing
+Usage: ./xdp_pass_user [options]
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user status lo[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C st[1P[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C sta[1P[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C stat[1P[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C statu[1P[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C status[1P lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C status [1Plo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C status l[1Po[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C status lo[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C status lo [K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[1P[1P[1P[1P[1@x[1@d[1@p[1@-[1@lo status lo [A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[Ca status lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[Cd status lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[Ce status lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[Cr status lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+
+[?2004lsudo: xdp-loader: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [7msudo xdp-loader statu[27m[7ms[27m[7m lo[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo xdp-loader status lo
+[?2004lsudo: xdp-loader: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo xdp-loader status lo[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cxdp-loader status [1Plo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[Cxdp-loader status l[1Po[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[Cxdp-loader status lo[K[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[Cxdp-loader status lo [K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004lCommand 'xdp-loader' not found, but can be installed with:
+sudo apt install xdp-tools
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo apt install xp[Kdp- tools
+[?2004lReading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 0%Reading state information... Done
+The following additional packages will be installed:
+  libxdp1
+The following NEW packages will be installed:
+  libxdp1 xdp-tools
+0 upgraded, 2 newly installed, 0 to remove and 5 not upgraded.
+Need to get 296 kB of archives.
+After this operation, 1,669 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+[33m0% [Working][0m[33m0% [Waiting for headers][0m                        Get:1 http://pk.archive.ubuntu.com/ubuntu noble/main amd64 libxdp1 amd64 1.4.2-1ubuntu4 [62.5 kB]
+[33m4% [1 libxdp1 13.7 kB/62.5 kB 22%][0m[33m                                  27% [Working][0m             Get:2 http://pk.archive.ubuntu.com/ubuntu noble/universe amd64 xdp-tools amd64 1.4.2-1ubuntu4 [233 kB]
+[33m28% [2 xdp-tools 2,508 B/233 kB 1%][0m[33m                                   100% [Working][0m              Fetched 296 kB in 1s (217 kB/s)
+
+7[0;23r8[1ASelecting previously unselected package libxdp1:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 161049 files and directories currently installed.)
+Preparing to unpack .../libxdp1_1.4.2-1ubuntu4_amd64.deb ...
+7[24;0f[42m[30mProgress: [  0%][49m[39m [..........................................................] 87[24;0f[42m[30mProgress: [ 11%][49m[39m [######....................................................] 8Unpacking libxdp1:amd64 (1.4.2-1ubuntu4) ...
+7[24;0f[42m[30mProgress: [ 22%][49m[39m [############..............................................] 8Selecting previously unselected package xdp-tools.
+Preparing to unpack .../xdp-tools_1.4.2-1ubuntu4_amd64.deb ...
+7[24;0f[42m[30mProgress: [ 33%][49m[39m [###################.......................................] 8Unpacking xdp-tools (1.4.2-1ubuntu4) ...
+7[24;0f[42m[30mProgress: [ 44%][49m[39m [#########################.................................] 8Setting up libxdp1:amd64 (1.4.2-1ubuntu4) ...
+7[24;0f[42m[30mProgress: [ 56%][49m[39m [################################..........................] 87[24;0f[42m[30mProgress: [ 67%][49m[39m [######################################....................] 8Setting up xdp-tools (1.4.2-1ubuntu4) ...
+7[24;0f[42m[30mProgress: [ 78%][49m[39m [#############################################.............] 87[24;0f[42m[30mProgress: [ 89%][49m[39m [###################################################.......] 8Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+
+7[0;24r8[1A[J[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo apt install xdp-tools[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [1Pxdp-loader status lo
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004lThis program must be run as root.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ xdp-loader status losudo apt install xdp-tools[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [1Pxdp-loader status lo
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo apt install xdp-tools
+[?2004lReading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 0%Reading state information... Done
+xdp-tools is already the newest version (1.4.2-1ubuntu4).
+0 upgraded, 0 newly installed, 0 to remove and 5 not upgraded.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo apt install xdp-tools[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [1Pxdp-loader status lo
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo apt install xdp-tools[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [1Pxdp-loader status lo
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo xdp-loader status lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C./xdp_pass_user status lo[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[Cxdp-loader status[5P lo
+[?2004lCURRENT XDP PROGRAM STATUS:
+
+Interface        Prio  Program name      Mode     ID   Tag               Chain actions
+--------------------------------------------------------------------------------------
+lo                     xdp_dispatcher    skb      124  bbf8adf53baeeeb7 
+ =>              50     xdp_prog_simple           113  3b185187f1855c4c  XDP_PASS
+ =>              50     xdp_prog_simple           133  3b185187f1855c4c  XDP_PASS
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [7msudo ./xdp_pass_user --dev lo --unloa[27m[7md[27m[7m-all[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo --unload-all\[K
+[?2004lSuccess: Unloading XDP prog name: xdp_prog_simple
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev lo --unload-all[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [C[C[C[C[C[12Pxdp-loader status lo
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004lCURRENT XDP PROGRAM STATUS:
+
+Interface        Prio  Program name      Mode     ID   Tag               Chain actions
+--------------------------------------------------------------------------------------
+lo                     <No XDP program loaded!>
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ cd [K.[K ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd xdp_[K-tutorial[K[K[K[K[K[K[K[K[K[K[K[K[K basic-[K02-prog-by-name/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile    [0m[01;32mxdp_loader[0m    xdp_offload_nfp.org  xdp_prog_kern.o
+README.org  xdp_loader.c  xdp_prog_kern.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ cd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ ;s[K[Kls
+[?2004l[0m[01;34madvanced01-xdp-tc-interact[0m  [01;32mconfigure[0m              README.org
+[01;34madvanced03-AF_XDP[0m           [01;34mexperiment01-tailgrow[0m  setup_dependencies.org
+[01;34mbasic01-xdp-pass[0m            [01;34minstall[0m                [01;34msetup-testlab[0m
+[01;34mbasic02-prog-by-name[0m        [01;34mlib[0m                    [01;34mtestenv[0m
+[01;34mbasic03-map-counter[0m         Makefile               [01;34mtracing01-xdp-simple[0m
+[01;34mbasic04-pinning-maps[0m        [01;34mpacket01-parsing[0m       [01;34mtracing02-xdp-monitor[0m
+[01;34mbasic-solutions[0m             [01;34mpacket02-rewriting[0m     [01;34mtracing03-xdp-debug-print[0m
+[01;34mcommon[0m                      [01;34mpacket03-redirecting[0m   [01;34mtracing04-xdp-tcpdump[0m
+config.mk                   [01;34mpacket-solutions[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd testenv/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [7msudo ../testenv/testenv.sh setup --name veth-b[27m[7ma[27m[7msic02[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ sudo ../testenv/testenv.sh setup --name veth-basic02
+[?2004lSetting up new environment 'veth-basic02'
+Setup environment 'veth-basic02' with peer ip fc00:dead:cafe:1::2.
+Waiting for interface configuration to settle...
+
+Running ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.026 ms
+
+--- fc00:dead:cafe:1::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.026/0.026/0.026/0.000 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ sudo ../testenv/testenv.sh setup --name veth-basic02[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ cd testenv/[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[Kcd ../[4Plscd basic02-prog-by-name/../[Ksudo xdp-loader status lo./xdp_pass_user --dev lo --unload-all[17Pxdp-loader status lo
+[?2004lCURRENT XDP PROGRAM STATUS:
+
+Interface        Prio  Program name      Mode     ID   Tag               Chain actions
+--------------------------------------------------------------------------------------
+lo                     <No XDP program loaded!>
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ sudo xdp-loader status lo../testenv/testenv.sh setup --name veth-basic02[27Pxdp-loader status lo[K[7msudo ./xdp_loader --help[27msudo ./xdp_loader --help
+[?2004lsudo: ./xdp_loader: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ls
+[?2004lconfig.sh  README.org  [0m[01;32msetup-env.sh[0m  [01;32mtestenv.sh[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$  cd..[K[K[K[K[Kcd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ ls
+[?2004l[0m[01;34madvanced01-xdp-tc-interact[0m  [01;34mcommon[0m                 [01;34mpacket01-parsing[0m        [01;34mtestenv[0m
+[01;34madvanced03-AF_XDP[0m           config.mk              [01;34mpacket02-rewriting[0m      [01;34mtracing01-xdp-simple[0m
+[01;34mbasic01-xdp-pass[0m            [01;32mconfigure[0m              [01;34mpacket03-redirecting[0m    [01;34mtracing02-xdp-monitor[0m
+[01;34mbasic02-prog-by-name[0m        [01;34mexperiment01-tailgrow[0m  [01;34mpacket-solutions[0m        [01;34mtracing03-xdp-debug-print[0m
+[01;34mbasic03-map-counter[0m         [01;34minstall[0m                README.org              [01;34mtracing04-xdp-tcpdump[0m
+[01;34mbasic04-pinning-maps[0m        [01;34mlib[0m                    setup_dependencies.org
+[01;34mbasic-solutions[0m             Makefile               [01;34msetup-testlab[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd basic02-prog-by-name/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ lscd basic02-prog-by-name/ls[Kcd ../[4Plssudo ./xdp_loader --helpxdp-loader status lo[1P./xdp_loader --help
+[?2004lUsage: ./xdp_loader [options]
+
+DOCUMENTATION:
+ XDP loader
+ - Specify BPF-object --filename to load 
+ - and select BPF program --progname name to XDP-attach to --dev
+
+Required options:
+ -d, --dev <ifname>         Operate on device <ifname>
+
+Other options:
+ -h, --help                 Show help
+ -S, --skb-mode             Install XDP program in SKB (AKA generic) mode
+ -N, --native-mode          Install XDP program in native mode
+ -A, --auto-mode            Auto-detect SKB or native mode
+     --offload-mode         Hardware offload XDP program to NIC
+ -U, --unload <id>          Unload XDP program <id> instead of loading
+     --unload-all           Unload all XDP programs on device
+ -q, --quiet                Quiet mode (no output)
+     --filename <file>      Load program from <file>
+     --progname <name>      Load program from function <name> in the ELF file
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7msudo ./xdp_loader --dev veth-basic02[27msudo ./xdp_loader --dev veth-basic02
+[?2004lBPF object (xdp_prog_kern) listing available XDP functions
+ xdp_pass_func
+ xdp_drop_func
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loaded BPF-object(xdp_prog_kern.o) and used program(xdp_pass_func)
+ - XDP prog id:153 attached on device:veth-basic02(ifindex:3)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02help[Kdev veth-basic02help[Kls[Kcd basic02-prog-by-name/ls[Kcd ../[4Plssudo ./xdp_loader --helpxdp-loader status lo../testenv/testenv.sh setup --name veth-basic02[27Pxdp-loader status lo
+[?2004lCURRENT XDP PROGRAM STATUS:
+
+Interface        Prio  Program name      Mode     ID   Tag               Chain actions
+--------------------------------------------------------------------------------------
+lo                     <No XDP program loaded!>
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo xdp-loader status lo[K[Kveth-basic02
+[?2004lCURRENT XDP PROGRAM STATUS:
+
+Interface        Prio  Program name      Mode     ID   Tag               Chain actions
+--------------------------------------------------------------------------------------
+veth-basic02           xdp_dispatcher    native   144  bbf8adf53baeeeb7 
+ =>              50     xdp_pass_func             153  3b185187f1855c4c  XDP_PASS
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo xdp-loader status veth-basic02[K[K[K[K[K[K[K[K[K[K[K[K[K
+[?2004lCURRENT XDP PROGRAM STATUS:
+
+Interface        Prio  Program name      Mode     ID   Tag               Chain actions
+--------------------------------------------------------------------------------------
+lo                     <No XDP program loaded!>
+enp8s0                 <No XDP program loaded!>
+veth-basic02           xdp_dispatcher    native   144  bbf8adf53baeeeb7 
+ =>              50     xdp_pass_func             153  3b185187f1855c4c  XDP_PASS
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo xdp-loader status veth-basic02lo[K./xdp_loader --dev veth-basic02[11Pxdp-loader status lo./xdp_loader --dev veth-basic02[C 0[K--unload-all
+[?2004lSuccess: Unloading XDP prog name: xdp_pass_func
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --unload-all[27Pxdp-loader status veth-basic02[K./xdp_loader --dev veth-basic02 --unload-all[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[7msudo ./xdp_loader --dev veth-basic02 --progname xdp_dr[27m[7mo[27m[7mp_func[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --progname xdp_drop_func
+[?2004lBPF object (xdp_prog_kern) listing available XDP functions
+ xdp_pass_func
+ xdp_drop_func
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loaded BPF-object(xdp_prog_kern.o) and used program(xdp_drop_func)
+ - XDP prog id:175 attached on device:veth-basic02(ifindex:3)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ping v[K-c 1 veth[K[Kt[Kth-basic-[K02
+[?2004lping: veth-basic02: Temporary failure in name resolution
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ping -c 1 veth-basic02[Kip a
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp8s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 10:7c:61:77:cd:8c brd ff:ff:ff:ff:ff:ff
+    inet 192.168.100.13/24 brd 192.168.100.255 scope global dynamic noprefixroute enp8s0
+       valid_lft 2027sec preferred_lft 2027sec
+    inet6 2407:aa80:15:4587:2f4a:a715:36c2:6f2e/64 scope global temporary dynamic 
+       valid_lft 86070sec preferred_lft 57748sec
+    inet6 2407:aa80:15:4587:127c:61ff:fe77:cd8c/64 scope global dynamic mngtmpaddr 
+       valid_lft 86070sec preferred_lft 86070sec
+    inet6 fe80::127c:61ff:fe77:cd8c/64 scope link 
+       valid_lft forever preferred_lft forever
+3: veth-basic02@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdp/id:165 qdisc noqueue state UP group default qlen 1000
+    link/ether 4e:9f:73:2e:5f:89 brd ff:ff:ff:ff:ff:ff link-netns veth-basic02
+    inet6 fc00:dead:cafe:1::1/64 scope global 
+       valid_lft forever preferred_lft forever
+    inet6 fe80::4c9f:73ff:fe2e:5f89/64 scope link 
+       valid_lft forever preferred_lft forever
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7mip a | grep veth-basic02[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cip a | grep veth-basic02
+[A
+[?2004l3: [01;31m[Kveth-basic02[m[K@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdp/id:165 qdisc noqueue state UP group default qlen 1000
+    link/ether 4e:9f:73:2e:5f:89 brd ff:ff:ff:ff:ff:ff link-netns [01;31m[Kveth-basic02[m[K
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7msudo ip netns exec veth-basic02[27msudo ip netns exec veth-basic02
+[?2004lNo command specified
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7m$ sudo ../testenv/testenv.sh enter --name veth-basic02[27m [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C$ sudo ../testenv/testenv.sh enter --name veth-basic02 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K2
+[?2004l$: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ $ sudo ../testenv/testenv.sh enter --name veth-basic02 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P
+[?2004l[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# [7mping fc00:dead:cafe:1::1[27mping fc00:dead:cafe:1::1
+[?2004lPING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 9197ms
+
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# ping fc00:dead:cafe:1::1
+[?2004lPING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+76 packets transmitted, 0 received, 100% packet loss, time 76805ms
+
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# [7msudo ../testenv/testenv.sh ping --name veth-b[27m[7ma[27m[7msic02[27m[A]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# sudo ../testenv/testenv.sh ping --name veth-basic02
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3103ms
+
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# ^C[?2004l[?2004h[?2004l
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# exut[K[Kit
+[?2004lexit
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ../testenv/testenv.sh enter --name veth-basic02[K[7msudo ../testenv/testenv.sh ping --name veth-basic02[27msudo ../testenv/testenv.sh ping --name veth-basic02
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2039ms
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ../testenv/testenv.sh ping --name veth-basic02[1@enter[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C$ sudo ../testenv/testenv.sh enter --name veth-basic02 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[23Psudo ip netns exec
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pip a | grep[C[C[C[C[C[C[C[C[C[C[C[C[C[7@sudo ip netns exec[C[C[C[C[C[C[C[C[C[C[C[C[C$ sudo ../testenv/testenv.sh enter --name veth-basic02 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[23Psudo ip netns exec
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C$ sudo ../testenv/testenv.sh enter --name veth-basic02 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2P
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Pping[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[7msudo ./xdp_loader --dev veth-basic02 --unload-all[27msudo ./xdp_loader --dev veth-basic02 --unload-all
+[?2004lSuccess: Unloading XDP prog name: xdp_pass_func
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7msudo ./xdp_loader --dev veth-basic02 --progname xdp_pa[27m[7ms[27m[7ms_func[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --progname xdp_pass_func
+[?2004lBPF object (xdp_prog_kern) listing available XDP functions
+ xdp_pass_func
+ xdp_drop_func
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loaded BPF-object(xdp_prog_kern.o) and used program(xdp_pass_func)
+ - XDP prog id:195 attached on device:veth-basic02(ifindex:3)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --progname xdp_pass_func[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5Punload-all
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./testenv/testenv.sh ping --name veth-basic02
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.075 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=2 ttl=64 time=0.038 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=3 ttl=64 time=0.037 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=4 ttl=64 time=0.036 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=5 ttl=64 time=0.037 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=6 ttl=64 time=0.034 ms
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+6 packets transmitted, 6 received, 0% packet loss, time 5119ms
+rtt min/avg/max/mdev = 0.034/0.042/0.075/0.014 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls[K[7m../testenv/testenv.sh alias[27m../testenv/testenv.sh alias
+[?2004lEval this with `eval $(../testenv/testenv.sh alias)` to create shell alias
+WARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+alias t='sudo /home/xainecks/XDP/xdp-tutorial/testenv/testenv.sh'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7meval $(../testenv/testenv.sh alias)[27meval $(../testenv/testenv.sh alias)
+[?2004lWARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ t ping
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.025 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=2 ttl=64 time=0.037 ms
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1064ms
+rtt min/avg/max/mdev = 0.025/0.031/0.037/0.006 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ t statys[K[Kus
+[?2004lCurrently selected environment: veth-basic02
+  Namespace:      veth-basic02 (id: 0)
+  Prefix:         fc00:dead:cafe:1::/64
+  Iface:          veth-basic02@if2 UP fc00:dead:cafe:1::1/64 fe80::4c9f:73ff:fe2e:5f89/64 
+
+All existing environments:
+  veth-basic02
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7msudo ./xdp_loader --dev veth-basic02 --unload-all[27m[1Psudo ./xdp_loader --dev veth-basic02 --unload-al[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Ksudo m[K,[K./xdp_loader --dev veth-basic-2[K[K02 --unload-all
+[?2004lSuccess: Unloading XDP prog name: xdp_pass_func
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --unload-all[C[K[K[K[K[K[K[K[K[K[Kprogname xdp_ab ort_func
+[?2004lBPF object (xdp_prog_kern) listing available XDP functions
+ xdp_pass_func
+ xdp_drop_func
+libxdp: Couldn't find xdp program in bpf object
+ERR: loading program xdp_abort_func: No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ k[Kls
+[?2004lMakefile  README.org  [0m[01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ make
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile  README.org  [0m[01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ lsmake[2Plssudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[7msudo ./xdp_loader --dev veth-basic02 --progname xdp_ab[27m[7mo[27m[7mrt_func[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func
+[?2004lBPF object (xdp_prog_kern) listing available XDP functions
+ xdp_pass_func
+ xdp_drop_func
+libxdp: Couldn't find xdp program in bpf object
+ERR: loading program xdp_abort_func: No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ nano xdp_prog_kern.c
+[?2004l[?2004h[?1049h[22;0;0t[1;24r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[22;52H(B[0;7m[ Reading... ](B[m[22;51H(B[0;7m[ Read 42 lines ](B[m[H(B[0;7m  GNU nano 7.2                                       xdp_prog_kern.c                                                 [1;116H(B[m[23d(B[0;7m^G(B[m Help[23;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[23;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[24d(B[0;7m^X(B[m Exit[24;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[24;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[2d(B[0;1m[34m/* SPDX-License-Identifier: GPL-2.0 */[3d[36m#include[33m <linux/bpf.h>[4d[36m#include[33m <bpf/bpf_helpers.h>[6d[34m/* Notice how this XDP/BPF-program contains several programs in the same source[7d * file. These will each get their own section in the ELF file, and via libbpf[8d * they can be selected individually, and via their file-descriptor attached to[9d * a given kernel BPF-hook.[10d *[11d * The libbpf bpf_object__find_program_by_title() refers to SEC names below.[12d * The iproute2 utility also use section name.[13d *[14d * Slightly confusing, the names that gets listed by "bpftool prog" are the[15d * C-function names (below the SEC define).[16d */[18d[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[19d[32mint[39m(B[m  xdp_pass_func([32mstruct[39m(B[m xdp_md *ctx)[20d{[21;9H[35mreturn[39m(B[m (B[0;1m[31mXDP_PASS[39m(B[m;[2d[?12l[?25h[?25l[?12l[?25h[3d[?25l[?12l[?25h[4d[?25l[?12l[?25h[5d[?25l[?12l[?25h[6d[?25l[?12l[?25h[7d[?25l[?12l[?25h[8d[?25l[?12l[?25h[9d[?25l[?12l[?25h[10d[?25l[?12l[?25h[11d[?25l[?12l[?25h[12d[?25l[?12l[?25h[13d[?25l[?12l[?25h[14d[?25l[?12l[?25h[15d[?25l[?12l[?25h[16d[?25l[?12l[?25h[17d[?25l[?12l[?25h[18d[?25l[?12l[?25h[19d[?25l[?12l[?25h[20d[?25l[?12l[?25h[21d[?25l[22d[K[?12l[?25h7[2;22r8
+[1;24r[21;1H}[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[32mint[39m(B[m  xdp_drop_func([32mstruct[39m(B[m xdp_md *ctx)[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H{[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;9H[35mreturn[39m(B[m (B[0;1m[31mXDP_DROP[39m(B[m;[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H}[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H(B[0;1m[34m/* Assignment#2: Add new XDP program section that use XDP_ABORTED */[39m(B[m[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[32mchar[39m(B[m _license[] (B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"license"[39m(B[m) = (B[0;1m[33m"GPL"[39m(B[m;[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H(B[0;1m[34m/* Hint the avail XDP action return codes are:[39m(B[m[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H(B[0;1m[34menum xdp_action {[39m(B[m[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;8H(B[0;1m[34m[1K XDP_ABORTED = 0,[39m(B[m[?25l[?12l[?25h[A[?25l[?12l[?25h[2;22r[22;1H[2S[1;24r[20;8H(B[0;1m[34m[1K XDP_DROP,[21;8H[1K XDP_PASS,[39m(B[m[?25l[?12l[?25h[18d[?25l[?12l[?25h[15d[?25l[?12l[?25h[12d[?25l[?12l[?25h[9d[?25l[?12l[?25h[6d[?25l[?12l[?25h[3d[?25l[?12l[?25h[2;21r[2;1H[2T[1;24r[2;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[3d[32mint[39m(B[m  xdp_pass_func([32mstruct[39m(B[m xdp_md *ctx)[A[?25l[?12l[?25h7[2;22r8[3T[1;24r[2;1H(B[0;1m[34m * C-function names (below the SEC define).[3d */[A[39m(B[m[?25l[?12l[?25h7[2;21r8[3T[1;24r[2;1H(B[0;1m[34m * The iproute2 utility also use section name.[3d *[4d * Slightly confusing, the names that gets listed by "bpftool prog" are the[2d[39m(B[m[?25l[?12l[?25h[5d[?25l[?12l[?25h[8d[?25l[?12l[?25h[11d[?25l[?12l[?25h[14d[?25l[?12l[?25h[17d[?25l[?12l[?25h[20d[?25l[?12l[?25h[2;22r[22;1H[2S[1;24r[20;1H[32mchar[39m(B[m _license[] (B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"license"[39m(B[m) = (B[0;1m[33m"GPL"[39m(B[m;[21d[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H(B[0;1m[34m/* Hint the avail XDP action return codes are:[21denum xdp_action {[39m(B[m[?25l[?12l[?25h[18d[?25l[?12l[?25h[15d[?25l[?12l[?25h[16d[?25l[1;70H(B[0;7m*[116G(B[m[16;21r[16;1HM[1;24r[17;1H[?12l[?25h[?25l[2;22r[22;1H[9S[1;24r[13;1H(B[0;1m[34menum xdp_action {[14;8H[1K XDP_ABORTED = 0,[15;8H[1K XDP_DROP,[16;8H[1K XDP_PASS,[17;8H[1K XDP_TX,[18;8H[1K XDP_REDIRECT,[19d};[20d*/[21d[39m(B[m[?12l[?25h[?25l[22;47H(B[0;1m[37m[41m[ To suspend, type ^T^Z ][39;49m(B[m[?12l[?25h[A[?25l[?12l[?25h[?25l[22;72H[?12l[?25h[A[?25l[?12l[?25h[?25l[?12l[?25h[18d[?25l[?12l[?25h[15d[?25l[?12l[?25h[12d[?25l[?12l[?25h[9d[?25l[?12l[?25h[6d[?25l[?12l[?25h[3d[?25l[22d[K[?12l[?25h[2;21r[2;1H[2T[1;24r[2;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[3d[32mint[39m(B[m  xdp_drop_func([32mstruct[39m(B[m xdp_md *ctx)[A[?25l[?12l[?25h7[2;21r8[3T[1;24r[2;9H[35mreturn[39m(B[m (B[0;1m[31mXDP_PASS[39m(B[m;[3d}[A[?25l[?12l[?25h7[2;21r8[3T[1;24r[2;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[3d[32mint[39m(B[m  xdp_pass_func([32mstruct[39m(B[m xdp_md *ctx)[4d{[2d[?25l[?12l[?25h7[2;21r8[3T[1;24r[2;1H(B[0;1m[34m * C-function names (below the SEC define).[3d */[A[39m(B[m[?25l[?12l[?25h7[2;22r8[3T[1;24r[2;1H(B[0;1m[34m * The iproute2 utility also use section name.[3d *[4d * Slightly confusing, the names that gets listed by "bpftool prog" are the[2d[39m(B[m[?25l[?12l[?25h7[2;22r8[3T[1;24r[2;1H(B[0;1m[34m * a given kernel BPF-hook.[3d *[4d * The libbpf bpf_object__find_program_by_title() refers to SEC names below.[2d[39m(B[m[?25l[?12l[?25h7[2;21r8[3T[1;24r[2;1H(B[0;1m[34m/* Notice how this XDP/BPF-program contains several programs in the same source[3d * file. These will each get their own section in the ELF file, and via libbpf[4d * they can be selected individually, and via their file-descriptor attached to[2d[39m(B[m[?25l[?12l[?25h7[2;22r8[3T[1;24r[2;1H(B[0;1m[36m#include[33m <linux/bpf.h>[3d[36m#include[33m <bpf/bpf_helpers.h>[A[39m(B[m[?25l[?12l[?25h7[2;21r8M[1;24r[2;1H(B[0;1m[34m/* SPDX-License-Identifier: GPL-2.0 */[39m(B[m[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[5d[?25l[?12l[?25h[8d[?25l[?12l[?25h[11d[?25l[?12l[?25h[14d[?25l[?12l[?25h[17d[?25l[?12l[?25h[20d[?25l[?12l[?25h[2;22r[22;1H[2S[1;24r[20;1H}[21d[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[20d[32mint[39m(B[m  xdp_drop_func([32mstruct[39m(B[m xdp_md *ctx)[21d{[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;9H[35mreturn[39m(B[m (B[0;1m[31mXDP_DROP[39m(B[m;[20d}[21d[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H(B[0;1m[34m/* Assignment#2: Add new XDP program section that use XDP_ABORTED */[21d[39m(B[m[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H[32mchar[39m(B[m _license[] (B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"license"[39m(B[m) = (B[0;1m[33m"GPL"[39m(B[m;[21d(B[0;1m[34m/* Hint the avail XDP action return codes are:[39m(B[m[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[20;1H(B[0;1m[34menum xdp_action {[21;8H[1K XDP_ABORTED = 0,[39m(B[m[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[14;21r[14;1HM[1;24r[16;1H[?12l[?25h[?25l[14;22r[14;1H[4T[1;24r[16;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp_abort"[39m(B[m)[17d[32mint[39m(B[m xdp_abort_func([32mstruct[39m(B[m xdp_md *ctx)[18d{[19;5H[35mreturn[39m(B[m (B[0;1m[31mXDP_ABORTED[39m(B[m;[20d}[?12l[?25h[?25l[21d[K[?12l[?25h[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H[32mchar[39m(B[m _license[] (B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"license"[39m(B[m) = (B[0;1m[33m"GPL"[39m(B[m;[21d(B[0;1m[34m/* Hint the avail XDP action return codes are:[39m(B[m[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[20;1H(B[0;1m[34menum xdp_action {[21;8H[1K XDP_ABORTED = 0,[39m(B[m[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;8H(B[0;1m[34m[1K XDP_DROP,[20;8H[1K XDP_PASS,[21;8H[1K XDP_TX,[39m(B[m[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;8H(B[0;1m[34m[1K XDP_REDIRECT,[20d};[21d*/[39m(B[m[?25l[?12l[?25h7[2;22r8[22d
+[1;24r[21;1H[?25l[?12l[?25h[?25l[?12l[?25h(B[0;1m[31mX[39m(B[m[?25l[?12l[?25h[K[?25l[22d(B[0;7mSave modified buffer?                                                                                                [23;1H Y(B[m Yes[K[24d(B[0;7m N(B[m No  [24;18H(B[0;7mC(B[m Cancel[K[22;23H[?12l[?25h[?25l[J[24d[?12l[?25h[24;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ nano xdp_prog_kern.c
+[?2004l[?2004h[?1049h[22;0;0t[1;24r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[22;52H(B[0;7m[ Reading... ](B[m[22;51H(B[0;7m[ Read 42 lines ](B[m[H(B[0;7m  GNU nano 7.2                                       xdp_prog_kern.c                                                 [1;116H(B[m[23d(B[0;7m^G(B[m Help[23;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[23;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[24d(B[0;7m^X(B[m Exit[24;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[24;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[2d(B[0;1m[34m/* SPDX-License-Identifier: GPL-2.0 */[3d[36m#include[33m <linux/bpf.h>[4d[36m#include[33m <bpf/bpf_helpers.h>[6d[34m/* Notice how this XDP/BPF-program contains several programs in the same source[7d * file. These will each get their own section in the ELF file, and via libbpf[8d * they can be selected individually, and via their file-descriptor attached to[9d * a given kernel BPF-hook.[10d *[11d * The libbpf bpf_object__find_program_by_title() refers to SEC names below.[12d * The iproute2 utility also use section name.[13d *[14d * Slightly confusing, the names that gets listed by "bpftool prog" are the[15d * C-function names (below the SEC define).[16d */[18d[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[19d[32mint[39m(B[m  xdp_pass_func([32mstruct[39m(B[m xdp_md *ctx)[20d{[21;9H[35mreturn[39m(B[m (B[0;1m[31mXDP_PASS[39m(B[m;[2d[?12l[?25h[?25l[?12l[?25h[5d[?25l[?12l[?25h[8d[?25l[?12l[?25h[11d[?25l[?12l[?25h[14d[?25l[?12l[?25h[17d[?25l[?12l[?25h[20d[?25l[22d[K[?12l[?25h7[2;22r8[2S[1;24r[20;1H}[21d[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp"[39m(B[m)[20d[32mint[39m(B[m  xdp_drop_func([32mstruct[39m(B[m xdp_md *ctx)[21d{[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;9H[35mreturn[39m(B[m (B[0;1m[31mXDP_DROP[39m(B[m;[20d}[21d[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H(B[0;1m[34m/* Assignment#2: Add new XDP program section that use XDP_ABORTED */[21d(B[0m[32mchar[39m(B[m _license[] (B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"license"[39m(B[m) = (B[0;1m[33m"GPL"[39m(B[m;[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[20;1H(B[0;1m[34m/* Hint the avail XDP action return codes are:[21d[39m(B[m[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[1;70H(B[0;7m*[116G(B[m[17;22r[17;1HM[1;24r[19;1H[?12l[?25h[?25l[?12l[?25h[A[?25l[2;22r[22;1H
+[1;24r[17;1H(B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"xdp_abort"[39m(B[m)[18d[32mint[39m(B[m xdp_abort_func([32mstruct[39m(B[m xdp_md *ctx)[K[19d{[20d    [35mreturn[39m(B[m (B[0;1m[31mXDP_ABORTED[39m(B[m;[K[21d}[?12l[?25h[?25l[?12l[?25h7[2;22r8[22d[3S[1;24r[19;1H[32mchar[39m(B[m _license[] (B[0;1m[31mSEC[39m(B[m((B[0;1m[33m"license"[39m(B[m) = (B[0;1m[33m"GPL"[39m(B[m;[21d(B[0;1m[34m/* Hint the avail XDP action return codes are:/[39m(B[m[?25l[22d(B[0;7mSave modified buffer?                                                                                                [23;1H Y(B[m Yes[K[24d(B[0;7m N(B[m No  [24;18H(B[0;7mC(B[m Cancel[K[22;23H[?12l[?25h[?25l[23d(B[0;7m^G(B[m Help[23;30H(B[0;7mM-D(B[m DOS Format[23;59H(B[0;7mM-A(B[m Append[23;88H(B[0;7mM-B(B[m Backup File[24d(B[0;7m^C(B[m Cancel[17G             (B[0;7mM-M(B[m Mac Format[24;59H(B[0;7mM-P(B[m Prepend[24;88H(B[0;7m^T(B[m Browse[22d(B[0;7mFile Name to Write: xdp_prog_kern.c(B[m[?12l[?25h[?25l[22;51H[1K (B[0;7m[ Writing... ](B[m[K[1;70H(B[0;7m [116G(B[m[22;50H(B[0;7m[ Wrote 47 lines ](B[m[J[24d[?12l[?25h[24;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ make
+[?2004l    CLANG    xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ,ake[K[K[K[Kmake
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ makenano xdp_prog_kern.csudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func
+[?2004lBPF object (xdp_prog_kern) listing available XDP functions
+ xdp_pass_func
+ xdp_drop_func
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loaded BPF-object(xdp_prog_kern.o) and used program(xdp_abort_func)
+ - XDP prog id:218 attached on device:veth-basic02(ifindex:3)
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ make[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cnano xdp_prog_kern.csudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake[2Plssudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5Punload-all
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct status[K[2Ppingeval $(../testenv/testenv.sh alias)[8P../testenv/testenv.sh aliaseval $(../testenv/testenv.sh alias)t ping[Kstatussudo ./xdp_loader --dev veth-basic02 --unload-allprogname xdp_abort_func[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake[2Plsmake[2Plssudo ./xdp_loader --dev veth-basic02 --progname xdp_abort_func[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5Punload-all
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct status[K[2Ppingeval $(../testenv/testenv.sh alias)t ping[K-ping6ping ping
+[?2004lgetopt: invalid option -- '6'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ t -6 ping[1Pping[1Pping[1Pping[C[C[C[C -6
+[?2004lgetopt: invalid option -- '6'
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ t ping -6[K[K
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+7 packets transmitted, 0 received, 100% packet loss, time 6182ms
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7msudo ip netns exec veth-basic02 bash[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ip netns exec veth-basic02 bash
+[A
+[?2004l[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# [7mping -6 fc00:dead:cafe:1::1[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cping -6 fc00:dead:cafe:1::1
+[A
+[?2004lPING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+31 packets transmitted, 0 received, 100% packet loss, time 30702ms
+
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# ^C[?2004l[?2004h[?2004l
+[?2004h]0;root@xainecks-PC1: /home/xainecks/XDP/xdp-tutorial/basic02-prog-by-nameroot@xainecks-PC1:/home/xainecks/XDP/xdp-tutorial/basic02-prog-by-name# x[Kexit
+[?2004lexit
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ [7msudo perf record -a -e xdp:xdp_exception sleep 4[27msudo perf record -a -e xdp:xdp_exception sleep 4
+[?2004l
+
+
+
+[ perf record: Woken up 1 times to write data ]
+
+[ perf record: Captured and wrote 1.788 MB perf.data ]
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile  perf.data  README.org  [0m[01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ks [K[K[Kk[Kls -lh perfg[K.data
+[?2004l-rw------- 1 root root 1.9M Jan 16 05:25 perf.data
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls -lh perf.data[Ksudo perf record -a -e xdp:xdp_exception sleep 4[12Pip netns exec veth-basic02 basht ping [Ksudo ip netns exec veth-basic02 basht ping [K-6[K
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^[[A^[[A^[[A^[[A^[[B^[[B^[[B^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3073ms
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ t ping ls -lh perf.data[Ksudo perf record -a -e xdp:xdp_exception sleep 4
+[?2004l^[[A^[[B^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.771 MB perf.data ]
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ sudo perf record -a -e xdp:xdp_exception sleep 4t ping [K[K[K[K[K[K[K[Kls
+[?2004lMakefile   [0m[00;90mperf.data.old[0m  [01;32mxdp_loader[0m    xdp_offload_nfp.org  xdp_prog_kern.o
+perf.data  README.org     xdp_loader.c  xdp_prog_kern.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ rn [K[Km perf.data.old
+[?2004lrm: remove write-protected regular file 'perf.data.old'? 
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ rm perf.data.old[K[K[K[K
+[?2004lrm: remove write-protected regular file 'perf.data'? 
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile   [0m[00;90mperf.data.old[0m  [01;32mxdp_loader[0m    xdp_offload_nfp.org  xdp_prog_kern.o
+perf.data  README.org     xdp_loader.c  xdp_prog_kern.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ lsrm perf.data
+[?2004lrm: remove write-protected regular file 'perf.data'? tes   y
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ ls
+[?2004lMakefile  [0m[00;90mperf.data.old[0m  README.org  [01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ lsrm perf.datals[Krm perf.data.old
+[?2004lrm: remove write-protected regular file 'perf.data.old'? yes
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ rm perf.data.old[Kls
+[?2004lMakefile  README.org  [0m[01;32mxdp_loader[0m  xdp_loader.c  xdp_offload_nfp.org  xdp_prog_kern.c  xdp_prog_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ lsrm perf.data.oldls[Krm perf.datals[Krm perf.data.oldls[Ksudo perf record -a -e xdp:xdp_exception sleep 4t ping [Kls -lh perf.data[9Pt ping 
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+46 packets transmitted, 0 received, 100% packet loss, time 46066ms
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic02-prog-by-name[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic02-prog-by-name[00m$ exit
+[?2004lexit
+
+Script done on 2026-01-16 05:30:44+05:00 [COMMAND_EXIT_CODE="1"]

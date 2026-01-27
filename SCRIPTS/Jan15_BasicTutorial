@@ -1,0 +1,197 @@
+Script started on 2026-01-15 03:22:33+05:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/SCRIPTS[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/SCRIPTS[00m$ cd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ cd x[Ks[Kxdp-tutorial/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ ./configure
+[?2004lclang: 18.1.3 (1ubuntu1)
+libbpf support: submodule
+ELF support: yes
+zlib support: yes
+libxdp support: submodule
+Configuring libxdp to use our libbpf submodule
+Found clang binary 'clang' with version 18 (from 'Ubuntu clang version 18.1.3 (1ubuntu1)')
+./configure: 98: [: Illegal number: ./configure: 97: -Q: not found
+not using emacs: , as it is too old (wanted version >=26, got ./configure: 97: -Q: not found)
+/usr/sbin/bpftool
+using bpftool v7.6.0
+libbpf support: custom v1.6.0
+  perf_buffer__consume support: yes
+  btf__load_from_kernel_by_id support: yes
+  btf__type_cnt support: yes
+  bpf_object__next_map support: yes
+  bpf_object__next_program support: yes
+  bpf_program__insn_cnt support: yes
+  bpf_program__type support: yes
+  bpf_program__flags support: yes
+  bpf_program__expected_attach_type support: yes
+  bpf_map_create support: yes
+  perf_buffer__new_raw support: yes
+  bpf_xdp_attach support: yes
+  bpf_map__set_autocreate support: yes
+  bpf_prog_test_run_opts support: yes
+  bpf_xdp_query support: yes
+zlib support: yes
+ELF support: yes
+pcap support: yes
+secure_getenv support: yes
+cap-ng support: no
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ make
+[?2004l
+lib
+
+  libbpf
+    CC       install/lib/libbpf.a
+    INSTALL  install/lib/libbpf.a
+
+  libxdp
+    CC       install/lib/libxdp.a
+    INSTALL  install/lib/libxdp.a
+
+basic01-xdp-pass
+    CC       common_params.o
+    CC       common_user_bpf_xdp.o
+    CC       xdp_pass_user
+    CLANG    xdp_pass_kern.o
+
+basic02-prog-by-name
+    CC       xdp_loader
+    CLANG    xdp_prog_kern.o
+
+basic03-map-counter
+    CC       xdp_load_and_stats
+    CLANG    xdp_prog_kern.o
+
+basic04-pinning-maps
+    CC       xdp_loader
+    CC       xdp_stats
+    CLANG    xdp_prog_kern.o
+
+basic-solutions
+    CC       xdp_stats
+    CC       xdp_loader
+
+packet01-parsing
+    CLANG    xdp_prog_kern.o
+    CLANG    xdp_sample.bpf.o
+    GEN      xdp_sample.skel.h
+    CLANG    xdp_load_bytes.bpf.o
+    GEN      xdp_load_bytes.skel.h
+    CC       params.o
+    CC       logging.o
+    CC       util.o
+    CC       stats.o
+    CC       xpcapng.o
+    CC       xdp_sample.o
+    CC       xdp-loader
+    COPY     xdp-loader
+    COPY     xdp_stats
+
+packet02-rewriting
+    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+
+packet03-redirecting
+    CC       xdp_prog_user
+    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+
+packet-solutions
+    CC       xdp_prog_user
+    CLANG    xdp_prog_kern_02.o
+    CLANG    xdp_prog_kern_03.o
+    CLANG    tc_reply_kern_02.o
+    CLANG    xdp_vlan01_kern.o
+    CLANG    xdp_vlan02_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+
+tracing01-xdp-simple
+    CC       trace_load_and_stats
+    CLANG    trace_prog_kern.o
+    CLANG    xdp_prog_kern.o
+
+tracing02-xdp-monitor
+    CC       trace_load_and_stats
+    CLANG    trace_prog_kern.o
+
+tracing03-xdp-debug-print
+    CC       trace_read
+    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+
+tracing04-xdp-tcpdump
+    CC       xdp_sample_pkts_user
+    CLANG    xdp_sample_pkts_kern.o
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd testenv
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ,[K./testenv.sh
+[?2004lUsage: ./testenv.sh [options] <command> [param]
+
+Commands:
+setup                   Setup and initialise new environment
+teardown                Tear down existing environment
+reset                   Reset environment to original state
+exec <command>          Exec <command> inside test environment
+enter                   Execute shell inside test environment
+ping                    Run ping inside test environment
+alias                   Print shell alias for easy access to this script
+status (or st)          Show status of test environment
+load                    Load XDP program on outer interface
+unload                  Unload XDP program on outer interface
+tcpdump                 Run on outer interface (or inner with --inner)
+stats                   Run the XDP statistics program
+redirect <env1> <env2>  Setup redirects for packet03 lessons
+
+Use --help to see the list of options.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ;s[K[Kls
+[?2004lconfig.sh  README.org  [0m[01;32msetup-env.sh[0m  [01;32mtestenv.sh[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/testenv[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/testenv[00m$ ls./testenv.sh[K[K[K[K[K[K[K[K[K[K[K[K.[Kcd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ ip link
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp8s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 10:7c:61:77:cd:8c brd ff:ff:ff:ff:ff:ff
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ ls
+[?2004l[0m[01;34madvanced01-xdp-tc-interact[0m  [01;32mconfigure[0m              README.org
+[01;34madvanced03-AF_XDP[0m           [01;34mexperiment01-tailgrow[0m  setup_dependencies.org
+[01;34mbasic01-xdp-pass[0m            [01;34minstall[0m                [01;34msetup-testlab[0m
+[01;34mbasic02-prog-by-name[0m        [01;34mlib[0m                    [01;34mtestenv[0m
+[01;34mbasic03-map-counter[0m         Makefile               [01;34mtracing01-xdp-simple[0m
+[01;34mbasic04-pinning-maps[0m        [01;34mpacket01-parsing[0m       [01;34mtracing02-xdp-monitor[0m
+[01;34mbasic-solutions[0m             [01;34mpacket02-rewriting[0m     [01;34mtracing03-xdp-debug-print[0m
+[01;34mcommon[0m                      [01;34mpacket03-redirecting[0m   [01;34mtracing04-xdp-tcpdump[0m
+config.mk                   [01;34mpacket-solutions[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd basic01-xdp-pass/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ ls
+[?2004lMakefile    xdp_pass_kern.c  [0m[01;32mxdp_pass_user[0m
+README.org  xdp_pass_kern.o  xdp_pass_user.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ make
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ ls
+[?2004lMakefile    xdp_pass_kern.c  [0m[01;32mxdp_pass_user[0m
+README.org  xdp_pass_kern.o  xdp_pass_user.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ ip link
+[?2004l1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp8s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 10:7c:61:77:cd:8c brd ff:ff:ff:ff:ff:ff
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [7msudo ./xdp_pass_user [27m[7m-[27m[7m-dev $IFACE --skb-mode [27m
+[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ./xdp_pass_user --dev $IFACE --skb-mode
+[A
+[?2004l[sudo] password for xainecks: 
+ERR: --dev name unknown err(19):No such device
+Usage: ./xdp_pass_user [options]
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ sudo ./xdp_pass_user --dev $IFACE --skb-mode
+[?2004lERR: --dev name unknown err(19):No such device
+Usage: ./xdp_pass_user [options]
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ [7msudo ./xdp_pass_user [27m[7m-[27m[7m-dev $IF --skb-mode [27m
+[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo ./xdp_pass_user --dev $IF --skb-mode
+[A
+[?2004lERR: --dev name unknown err(19):No such device
+Usage: ./xdp_pass_user [options]
+Use --help (or -h) to see full option list.
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic01-xdp-pass[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic01-xdp-pass[00m$ exit
+[?2004lexit
+
+Script done on 2026-01-15 04:05:53+05:00 [COMMAND_EXIT_CODE="2"]

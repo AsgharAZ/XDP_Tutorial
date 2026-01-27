@@ -1,0 +1,559 @@
+Script started on 2026-01-18 20:36:52+05:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/SCRIPTS[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/SCRIPTS[00m$ ls[K[Kcd ../
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ ls
+[?2004l[0m[01;34mSCRIPTS[0m  [01;34mxdp-tutorial[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ cd xdp-tutorial/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial[00m$ cd basic_[K03_[K-map-counter/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ ls[K[K[7msudo ./xdp_load_an[27m[7md[27m[7m_stats --dev lo[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ sudo ./xdp_load_and_stats --dev lo
+[?2004l[sudo] password for xainecks: 
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loaded BPF-object(xdp_prog_kern.o) and used section(xdp_stats1_func)
+ - XDP prog id:128 attached on device:lo(ifindex:1)
+
+Collecting stats from BPF map
+ - BPF map (bpf_map_type:2) id:12 name:xdp_stats_map key_size:4 value_size:8 max_entries:5
+
+XDP-action  
+XDP_PASS               2 pkts (         8 pps) period:0.250078
+XDP_PASS               9 pkts (         3 pps) period:2.000092
+XDP_PASS               9 pkts (         0 pps) period:2.000079
+XDP_PASS               9 pkts (         0 pps) period:2.000092
+XDP_PASS               9 pkts (         0 pps) period:2.000077
+XDP_PASS               9 pkts (         0 pps) period:2.000078
+XDP_PASS               9 pkts (         0 pps) period:2.000091
+XDP_PASS               9 pkts (         0 pps) period:2.000092
+XDP_PASS               9 pkts (         0 pps) period:2.000082
+XDP_PASS               9 pkts (         0 pps) period:2.000077
+XDP_PASS               9 pkts (         0 pps) period:2.000078
+XDP_PASS               9 pkts (         0 pps) period:2.000079
+XDP_PASS               9 pkts (         0 pps) period:2.000076
+XDP_PASS               9 pkts (         0 pps) period:2.000078
+XDP_PASS               9 pkts (         0 pps) period:2.000090
+XDP_PASS               9 pkts (         0 pps) period:2.000077
+XDP_PASS              13 pkts (         2 pps) period:2.000079
+XDP_PASS              13 pkts (         0 pps) period:2.000078
+XDP_PASS              13 pkts (         0 pps) period:2.000077
+XDP_PASS              13 pkts (         0 pps) period:2.000086
+XDP_PASS              13 pkts (         0 pps) period:2.000084
+XDP_PASS              13 pkts (         0 pps) period:2.000079
+XDP_PASS              13 pkts (         0 pps) period:2.000083
+XDP_PASS              13 pkts (         0 pps) period:2.000086
+XDP_PASS              13 pkts (         0 pps) period:2.000079
+XDP_PASS              13 pkts (         0 pps) period:2.000083
+XDP_PASS              13 pkts (         0 pps) period:2.000078
+XDP_PASS              13 pkts (         0 pps) period:2.000092
+XDP_PASS              13 pkts (         0 pps) period:2.000080
+XDP_PASS              13 pkts (         0 pps) period:2.000316
+XDP_PASS              13 pkts (         0 pps) period:2.000091
+XDP_PASS              13 pkts (         0 pps) period:2.000094
+XDP_PASS              20 pkts (         3 pps) period:2.000083
+XDP_PASS              20 pkts (         0 pps) period:2.000080
+XDP_PASS              20 pkts (         0 pps) period:2.000077
+XDP_PASS              20 pkts (         0 pps) period:2.000082
+XDP_PASS              20 pkts (         0 pps) period:2.000082
+XDP_PASS              20 pkts (         0 pps) period:2.000082
+XDP_PASS              20 pkts (         0 pps) period:2.000084
+XDP_PASS              20 pkts (         0 pps) period:2.000079
+XDP_PASS              26 pkts (         3 pps) period:2.000094
+XDP_PASS              32 pkts (         3 pps) period:2.000092
+XDP_PASS              32 pkts (         0 pps) period:2.000043
+XDP_PASS              32 pkts (         0 pps) period:2.000082
+XDP_PASS              32 pkts (         0 pps) period:2.000092
+XDP_PASS              32 pkts (         0 pps) period:2.000078
+XDP_PASS              39 pkts (         3 pps) period:2.000079
+XDP_PASS              39 pkts (         0 pps) period:2.000081
+XDP_PASS              39 pkts (         0 pps) period:2.000082
+XDP_PASS              39 pkts (         0 pps) period:2.000078
+XDP_PASS              39 pkts (         0 pps) period:2.000082
+XDP_PASS              39 pkts (         0 pps) period:2.000086
+XDP_PASS              39 pkts (         0 pps) period:2.000080
+XDP_PASS              39 pkts (         0 pps) period:2.000079
+XDP_PASS              39 pkts (         0 pps) period:2.000076
+XDP_PASS              39 pkts (         0 pps) period:2.000093
+XDP_PASS              39 pkts (         0 pps) period:2.000085
+XDP_PASS              39 pkts (         0 pps) period:2.000053
+XDP_PASS              39 pkts (         0 pps) period:2.000084
+XDP_PASS              39 pkts (         0 pps) period:2.000085
+XDP_PASS              39 pkts (         0 pps) period:2.000081
+XDP_PASS              39 pkts (         0 pps) period:2.000081
+XDP_PASS              39 pkts (         0 pps) period:2.000096
+XDP_PASS              39 pkts (         0 pps) period:2.000095
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000082
+XDP_PASS              39 pkts (         0 pps) period:2.000089
+XDP_PASS              39 pkts (         0 pps) period:2.000080
+XDP_PASS              39 pkts (         0 pps) period:2.000093
+XDP_PASS              39 pkts (         0 pps) period:2.000085
+XDP_PASS              39 pkts (         0 pps) period:2.000102
+XDP_PASS              39 pkts (         0 pps) period:2.000074
+XDP_PASS              39 pkts (         0 pps) period:2.000099
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000080
+XDP_PASS              39 pkts (         0 pps) period:2.000082
+XDP_PASS              39 pkts (         0 pps) period:2.000079
+XDP_PASS              39 pkts (         0 pps) period:2.000045
+XDP_PASS              39 pkts (         0 pps) period:2.000095
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000080
+XDP_PASS              39 pkts (         0 pps) period:2.000095
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000095
+XDP_PASS              39 pkts (         0 pps) period:2.000081
+XDP_PASS              39 pkts (         0 pps) period:2.000095
+XDP_PASS              39 pkts (         0 pps) period:2.000096
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000093
+XDP_PASS              39 pkts (         0 pps) period:2.000081
+XDP_PASS              39 pkts (         0 pps) period:2.000079
+XDP_PASS              39 pkts (         0 pps) period:2.000080
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              39 pkts (         0 pps) period:2.000091
+XDP_PASS              39 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         3 pps) period:2.000095
+XDP_PASS              45 pkts (         0 pps) period:2.000098
+XDP_PASS              45 pkts (         0 pps) period:2.000080
+XDP_PASS              45 pkts (         0 pps) period:2.000080
+XDP_PASS              45 pkts (         0 pps) period:2.000079
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000081
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000095
+XDP_PASS              45 pkts (         0 pps) period:2.000093
+XDP_PASS              45 pkts (         0 pps) period:2.000093
+XDP_PASS              45 pkts (         0 pps) period:2.000093
+XDP_PASS              45 pkts (         0 pps) period:2.000081
+XDP_PASS              45 pkts (         0 pps) period:2.000080
+XDP_PASS              45 pkts (         0 pps) period:2.000092
+XDP_PASS              45 pkts (         0 pps) period:2.000095
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000092
+XDP_PASS              45 pkts (         0 pps) period:2.000095
+XDP_PASS              45 pkts (         0 pps) period:2.000097
+XDP_PASS              45 pkts (         0 pps) period:2.000085
+XDP_PASS              45 pkts (         0 pps) period:2.000099
+XDP_PASS              45 pkts (         0 pps) period:2.000081
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000103
+XDP_PASS              45 pkts (         0 pps) period:2.000080
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000095
+XDP_PASS              45 pkts (         0 pps) period:2.000096
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              45 pkts (         0 pps) period:2.000095
+XDP_PASS              45 pkts (         0 pps) period:2.000096
+XDP_PASS              45 pkts (         0 pps) period:2.000094
+XDP_PASS              51 pkts (         3 pps) period:2.000080
+XDP_PASS              51 pkts (         0 pps) period:2.000094
+XDP_PASS              51 pkts (         0 pps) period:2.000080
+XDP_PASS              51 pkts (         0 pps) period:2.000081
+XDP_PASS              51 pkts (         0 pps) period:2.000095
+XDP_PASS              51 pkts (         0 pps) period:2.000189
+XDP_PASS              51 pkts (         0 pps) period:2.000098
+XDP_PASS              51 pkts (         0 pps) period:2.000096
+XDP_PASS              51 pkts (         0 pps) period:2.000094
+XDP_PASS              51 pkts (         0 pps) period:2.000095
+XDP_PASS              51 pkts (         0 pps) period:2.000080
+XDP_PASS              55 pkts (         2 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000096
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000092
+XDP_PASS              55 pkts (         0 pps) period:2.000096
+XDP_PASS              55 pkts (         0 pps) period:2.000095
+XDP_PASS              55 pkts (         0 pps) period:2.000095
+XDP_PASS              55 pkts (         0 pps) period:2.000081
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000096
+XDP_PASS              55 pkts (         0 pps) period:2.000082
+XDP_PASS              55 pkts (         0 pps) period:2.000382
+XDP_PASS              55 pkts (         0 pps) period:2.000080
+XDP_PASS              55 pkts (         0 pps) period:2.000266
+XDP_PASS              55 pkts (         0 pps) period:2.000095
+XDP_PASS              55 pkts (         0 pps) period:2.000193
+XDP_PASS              55 pkts (         0 pps) period:2.000083
+XDP_PASS              55 pkts (         0 pps) period:2.000095
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000089
+XDP_PASS              55 pkts (         0 pps) period:2.000091
+XDP_PASS              55 pkts (         0 pps) period:2.000096
+XDP_PASS              55 pkts (         0 pps) period:2.000098
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000156
+XDP_PASS              55 pkts (         0 pps) period:2.000081
+XDP_PASS              55 pkts (         0 pps) period:2.000092
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000094
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000093
+XDP_PASS              55 pkts (         0 pps) period:2.000084
+XDP_PASS              61 pkts (         3 pps) period:2.000224
+XDP_PASS              61 pkts (         0 pps) period:2.000103
+XDP_PASS              61 pkts (         0 pps) period:2.000093
+XDP_PASS              61 pkts (         0 pps) period:2.000094
+XDP_PASS              67 pkts (         3 pps) period:2.000079
+XDP_PASS              67 pkts (         0 pps) period:2.000270
+XDP_PASS              67 pkts (         0 pps) period:2.000096
+XDP_PASS              67 pkts (         0 pps) period:2.000329
+XDP_PASS              67 pkts (         0 pps) period:2.000093
+XDP_PASS              74 pkts (         3 pps) period:2.000093
+XDP_PASS              74 pkts (         0 pps) period:2.000079
+XDP_PASS              74 pkts (         0 pps) period:2.000082
+XDP_PASS              74 pkts (         0 pps) period:2.000101
+XDP_PASS              74 pkts (         0 pps) period:2.000090
+XDP_PASS              74 pkts (         0 pps) period:2.000093
+XDP_PASS              74 pkts (         0 pps) period:2.000094
+XDP_PASS              74 pkts (         0 pps) period:2.000093
+XDP_PASS              74 pkts (         0 pps) period:2.000093
+XDP_PASS              74 pkts (         0 pps) period:2.000092
+XDP_PASS              74 pkts (         0 pps) period:2.000089
+XDP_PASS              74 pkts (         0 pps) period:2.000092
+XDP_PASS              74 pkts (         0 pps) period:2.000094
+XDP_PASS              74 pkts (         0 pps) period:2.000096
+XDP_PASS              88 pkts (         7 pps) period:2.000276
+XDP_PASS              88 pkts (         0 pps) period:2.000081
+XDP_PASS              88 pkts (         0 pps) period:2.000081
+XDP_PASS              88 pkts (         0 pps) period:2.000078
+XDP_PASS              88 pkts (         0 pps) period:2.000079
+XDP_PASS              88 pkts (         0 pps) period:2.000080
+XDP_PASS              94 pkts (         3 pps) period:2.000267
+XDP_PASS              94 pkts (         0 pps) period:2.000309
+XDP_PASS              94 pkts (         0 pps) period:2.000088
+XDP_PASS              94 pkts (         0 pps) period:2.000095
+XDP_PASS              94 pkts (         0 pps) period:2.000588
+XDP_PASS              94 pkts (         0 pps) period:2.000129
+XDP_PASS              94 pkts (         0 pps) period:2.000083
+XDP_PASS              94 pkts (         0 pps) period:2.000097
+XDP_PASS              94 pkts (         0 pps) period:2.000093
+XDP_PASS              94 pkts (         0 pps) period:2.000080
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000081
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000081
+XDP_PASS              94 pkts (         0 pps) period:2.000161
+XDP_PASS              94 pkts (         0 pps) period:2.000095
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000096
+XDP_PASS              94 pkts (         0 pps) period:2.000095
+XDP_PASS              94 pkts (         0 pps) period:2.000091
+XDP_PASS              94 pkts (         0 pps) period:2.000092
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000093
+XDP_PASS              94 pkts (         0 pps) period:2.000080
+XDP_PASS              94 pkts (         0 pps) period:2.000093
+XDP_PASS              94 pkts (         0 pps) period:2.000095
+XDP_PASS              94 pkts (         0 pps) period:2.000093
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000092
+XDP_PASS              94 pkts (         0 pps) period:2.000094
+XDP_PASS              94 pkts (         0 pps) period:2.000093
+XDP_PASS              94 pkts (         0 pps) period:2.000071
+XDP_PASS              94 pkts (         0 pps) period:2.000099
+XDP_PASS             100 pkts (         3 pps) period:2.000187
+XDP_PASS             100 pkts (         0 pps) period:2.000099
+XDP_PASS             100 pkts (         0 pps) period:2.000093
+XDP_PASS             106 pkts (         3 pps) period:2.000081
+XDP_PASS             106 pkts (         0 pps) period:2.000084
+XDP_PASS             106 pkts (         0 pps) period:2.000092
+XDP_PASS             106 pkts (         0 pps) period:2.000080
+XDP_PASS             106 pkts (         0 pps) period:2.000078
+XDP_PASS             106 pkts (         0 pps) period:2.000077
+XDP_PASS             106 pkts (         0 pps) period:2.000086
+XDP_PASS             106 pkts (         0 pps) period:2.000094
+XDP_PASS             106 pkts (         0 pps) period:2.000079
+XDP_PASS             114 pkts (         4 pps) period:2.000079
+XDP_PASS             118 pkts (         2 pps) period:2.000078
+XDP_PASS             118 pkts (         0 pps) period:2.000079
+XDP_PASS             118 pkts (         0 pps) period:2.000079
+XDP_PASS             118 pkts (         0 pps) period:2.000080
+XDP_PASS             118 pkts (         0 pps) period:2.000080
+XDP_PASS             118 pkts (         0 pps) period:2.000091
+XDP_PASS             118 pkts (         0 pps) period:2.000096
+XDP_PASS             118 pkts (         0 pps) period:2.000079
+XDP_PASS             118 pkts (         0 pps) period:2.000089
+XDP_PASS             118 pkts (         0 pps) period:2.000078
+XDP_PASS             118 pkts (         0 pps) period:2.000078
+XDP_PASS             118 pkts (         0 pps) period:2.000086
+XDP_PASS             118 pkts (         0 pps) period:2.000085
+XDP_PASS             118 pkts (         0 pps) period:2.000082
+XDP_PASS             118 pkts (         0 pps) period:2.000080
+XDP_PASS             118 pkts (         0 pps) period:2.000097
+XDP_PASS             118 pkts (         0 pps) period:2.000093
+XDP_PASS             118 pkts (         0 pps) period:2.000092
+XDP_PASS             118 pkts (         0 pps) period:2.000092
+XDP_PASS             118 pkts (         0 pps) period:2.000094
+XDP_PASS             118 pkts (         0 pps) period:2.000095
+XDP_PASS             118 pkts (         0 pps) period:2.000095
+XDP_PASS             125 pkts (         3 pps) period:2.000095
+XDP_PASS             125 pkts (         0 pps) period:2.000082
+XDP_PASS             125 pkts (         0 pps) period:2.000092
+XDP_PASS             125 pkts (         0 pps) period:2.000116
+XDP_PASS             125 pkts (         0 pps) period:2.000081
+XDP_PASS             125 pkts (         0 pps) period:2.000082
+XDP_PASS             125 pkts (         0 pps) period:2.000081
+XDP_PASS             125 pkts (         0 pps) period:2.000080
+XDP_PASS             125 pkts (         0 pps) period:2.000085
+XDP_PASS             125 pkts (         0 pps) period:2.000089
+XDP_PASS             125 pkts (         0 pps) period:2.000094
+XDP_PASS             125 pkts (         0 pps) period:2.000301
+XDP_PASS             125 pkts (         0 pps) period:2.000090
+XDP_PASS             125 pkts (         0 pps) period:2.000093
+XDP_PASS             125 pkts (         0 pps) period:2.000082
+XDP_PASS             125 pkts (         0 pps) period:2.000081
+XDP_PASS             125 pkts (         0 pps) period:2.000083
+XDP_PASS             125 pkts (         0 pps) period:2.000089
+XDP_PASS             125 pkts (         0 pps) period:2.000094
+XDP_PASS             125 pkts (         0 pps) period:2.000093
+XDP_PASS             125 pkts (         0 pps) period:2.000092
+XDP_PASS             132 pkts (         3 pps) period:2.000080
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000079
+XDP_PASS             132 pkts (         0 pps) period:2.000079
+XDP_PASS             132 pkts (         0 pps) period:2.000081
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000087
+XDP_PASS             132 pkts (         0 pps) period:2.000093
+XDP_PASS             132 pkts (         0 pps) period:2.000093
+XDP_PASS             132 pkts (         0 pps) period:2.000093
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000093
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000082
+XDP_PASS             132 pkts (         0 pps) period:2.000081
+XDP_PASS             132 pkts (         0 pps) period:2.000095
+XDP_PASS             132 pkts (         0 pps) period:2.000079
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000092
+XDP_PASS             132 pkts (         0 pps) period:2.000094
+XDP_PASS             132 pkts (         0 pps) period:2.000080
+XDP_PASS             132 pkts (         0 pps) period:2.000082
+XDP_PASS             139 pkts (         3 pps) period:2.000093
+XDP_PASS             139 pkts (         0 pps) period:2.000093
+XDP_PASS             139 pkts (         0 pps) period:2.000095
+XDP_PASS             139 pkts (         0 pps) period:2.000092
+XDP_PASS             139 pkts (         0 pps) period:2.000094
+XDP_PASS             139 pkts (         0 pps) period:2.000041
+XDP_PASS             139 pkts (         0 pps) period:2.000103
+XDP_PASS             145 pkts (         3 pps) period:2.000102
+XDP_PASS             145 pkts (         0 pps) period:2.000095
+XDP_PASS             145 pkts (         0 pps) period:2.000094
+XDP_PASS             145 pkts (         0 pps) period:2.000080
+XDP_PASS             145 pkts (         0 pps) period:2.000093
+XDP_PASS             145 pkts (         0 pps) period:2.000093
+XDP_PASS             145 pkts (         0 pps) period:2.000094
+XDP_PASS             151 pkts (         3 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000079
+XDP_PASS             151 pkts (         0 pps) period:2.000095
+XDP_PASS             151 pkts (         0 pps) period:2.000083
+XDP_PASS             151 pkts (         0 pps) period:2.000083
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000094
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000092
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000094
+XDP_PASS             151 pkts (         0 pps) period:2.000094
+XDP_PASS             151 pkts (         0 pps) period:2.000082
+XDP_PASS             151 pkts (         0 pps) period:2.000092
+XDP_PASS             151 pkts (         0 pps) period:2.000094
+XDP_PASS             151 pkts (         0 pps) period:2.000079
+XDP_PASS             151 pkts (         0 pps) period:2.000080
+XDP_PASS             151 pkts (         0 pps) period:2.000078
+XDP_PASS             151 pkts (         0 pps) period:2.000077
+XDP_PASS             151 pkts (         0 pps) period:2.000091
+XDP_PASS             151 pkts (         0 pps) period:2.000268
+XDP_PASS             151 pkts (         0 pps) period:2.000079
+XDP_PASS             151 pkts (         0 pps) period:2.000211
+XDP_PASS             151 pkts (         0 pps) period:2.000080
+XDP_PASS             151 pkts (         0 pps) period:2.000091
+XDP_PASS             151 pkts (         0 pps) period:2.000078
+XDP_PASS             151 pkts (         0 pps) period:2.000078
+XDP_PASS             151 pkts (         0 pps) period:2.000077
+XDP_PASS             151 pkts (         0 pps) period:2.000093
+XDP_PASS             151 pkts (         0 pps) period:2.000064
+XDP_PASS             151 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         6 pps) period:2.000079
+XDP_PASS             163 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         0 pps) period:2.000091
+XDP_PASS             163 pkts (         0 pps) period:2.000094
+XDP_PASS             163 pkts (         0 pps) period:2.000077
+XDP_PASS             163 pkts (         0 pps) period:2.000091
+XDP_PASS             163 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         0 pps) period:2.000076
+XDP_PASS             163 pkts (         0 pps) period:2.000077
+XDP_PASS             163 pkts (         0 pps) period:2.000081
+XDP_PASS             163 pkts (         0 pps) period:2.000093
+XDP_PASS             163 pkts (         0 pps) period:2.000079
+XDP_PASS             163 pkts (         0 pps) period:2.000079
+XDP_PASS             163 pkts (         0 pps) period:2.000079
+XDP_PASS             163 pkts (         0 pps) period:2.000077
+XDP_PASS             163 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         0 pps) period:2.000091
+XDP_PASS             163 pkts (         0 pps) period:2.000080
+XDP_PASS             163 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         0 pps) period:2.000077
+XDP_PASS             163 pkts (         0 pps) period:2.000080
+XDP_PASS             163 pkts (         0 pps) period:2.000078
+XDP_PASS             163 pkts (         0 pps) period:2.000052
+XDP_PASS             163 pkts (         0 pps) period:2.000080
+XDP_PASS             163 pkts (         0 pps) period:2.000084
+XDP_PASS             163 pkts (         0 pps) period:2.000083
+XDP_PASS             163 pkts (         0 pps) period:2.000083
+XDP_PASS             163 pkts (         0 pps) period:2.000093
+XDP_PASS             163 pkts (         0 pps) period:2.000094
+XDP_PASS             163 pkts (         0 pps) period:2.000094
+XDP_PASS             163 pkts (         0 pps) period:2.000080
+XDP_PASS             163 pkts (         0 pps) period:2.000083
+XDP_PASS             163 pkts (         0 pps) period:2.000094
+XDP_PASS             163 pkts (         0 pps) period:2.000277
+XDP_PASS             163 pkts (         0 pps) period:2.000080
+XDP_PASS             163 pkts (         0 pps) period:2.000080
+XDP_PASS             163 pkts (         0 pps) period:2.000095
+XDP_PASS             248 pkts (        42 pps) period:2.000097
+XDP_PASS             254 pkts (         3 pps) period:2.000090
+XDP_PASS             532 pkts (       139 pps) period:2.000135
+XDP_PASS             564 pkts (        16 pps) period:2.000299
+XDP_PASS             566 pkts (         1 pps) period:2.000103
+XDP_PASS             746 pkts (        90 pps) period:2.000188
+XDP_PASS             746 pkts (         0 pps) period:2.000188
+XDP_PASS             746 pkts (         0 pps) period:2.000294
+XDP_PASS             746 pkts (         0 pps) period:2.000099
+XDP_PASS             746 pkts (         0 pps) period:2.000366
+XDP_PASS            1149 pkts (       201 pps) period:2.000088
+XDP_PASS            1322 pkts (        86 pps) period:2.000227
+XDP_PASS            1371 pkts (        24 pps) period:2.000104
+XDP_PASS            1401 pkts (        15 pps) period:2.000081
+XDP_PASS            1424 pkts (        11 pps) period:2.000080
+XDP_PASS            1424 pkts (         0 pps) period:2.000093
+XDP_PASS            1424 pkts (         0 pps) period:2.000094
+XDP_PASS            1431 pkts (         3 pps) period:2.000098
+XDP_PASS            1431 pkts (         0 pps) period:2.000082
+XDP_PASS            1431 pkts (         0 pps) period:2.000094
+XDP_PASS            1435 pkts (         2 pps) period:2.000080
+XDP_PASS            1435 pkts (         0 pps) period:2.000084
+XDP_PASS            1435 pkts (         0 pps) period:2.000094
+XDP_PASS            1435 pkts (         0 pps) period:2.000083
+XDP_PASS            1442 pkts (         3 pps) period:2.000081
+XDP_PASS            1442 pkts (         0 pps) period:2.000080
+XDP_PASS            1446 pkts (         2 pps) period:2.000094
+XDP_PASS            1452 pkts (         3 pps) period:2.000103
+XDP_PASS            1459 pkts (         3 pps) period:2.000116
+XDP_PASS            1459 pkts (         0 pps) period:2.000078
+XDP_PASS            1459 pkts (         0 pps) period:2.000077
+XDP_PASS            1459 pkts (         0 pps) period:2.000079
+XDP_PASS            1463 pkts (         2 pps) period:2.000080
+XDP_PASS            1463 pkts (         0 pps) period:2.000095
+XDP_PASS            1463 pkts (         0 pps) period:2.000289
+XDP_PASS            1463 pkts (         0 pps) period:2.000096
+XDP_PASS            1463 pkts (         0 pps) period:2.000095
+XDP_PASS            1463 pkts (         0 pps) period:2.000107
+XDP_PASS            1463 pkts (         0 pps) period:2.000086
+XDP_PASS            1463 pkts (         0 pps) period:2.000085
+XDP_PASS            1463 pkts (         0 pps) period:2.000093
+XDP_PASS            1463 pkts (         0 pps) period:2.000095
+XDP_PASS            1479 pkts (         8 pps) period:2.000080
+XDP_PASS            1479 pkts (         0 pps) period:2.000079
+XDP_PASS            1479 pkts (         0 pps) period:2.000084
+XDP_PASS            1479 pkts (         0 pps) period:2.000086
+XDP_PASS            1479 pkts (         0 pps) period:2.000082
+XDP_PASS            1479 pkts (         0 pps) period:2.000081
+XDP_PASS            1479 pkts (         0 pps) period:2.000081
+XDP_PASS            1479 pkts (         0 pps) period:2.000094
+XDP_PASS            1479 pkts (         0 pps) period:2.000077
+XDP_PASS            1479 pkts (         0 pps) period:2.000079
+XDP_PASS            1479 pkts (         0 pps) period:2.000081
+XDP_PASS            1479 pkts (         0 pps) period:2.000083
+XDP_PASS            1479 pkts (         0 pps) period:2.000087
+XDP_PASS            1479 pkts (         0 pps) period:2.000092
+XDP_PASS            1479 pkts (         0 pps) period:2.000080
+XDP_PASS            1485 pkts (         3 pps) period:2.000094
+XDP_PASS            1485 pkts (         0 pps) period:2.000094
+XDP_PASS            1485 pkts (         0 pps) period:2.000086
+XDP_PASS            1485 pkts (         0 pps) period:2.000093
+XDP_PASS            1485 pkts (         0 pps) period:2.000079
+XDP_PASS            1492 pkts (         3 pps) period:2.000080
+^C
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ sudo ./xdp_load_and_stats --dev lo [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ko
+[?2004l[sudo] password for xainecks: 
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+libbpf: elf: skipping unrecognized data section(7) xdp_metadata
+Success: Loaded BPF-object(xdp_prog_kern.o) and used section(xdp_stats1_func)
+ - XDP prog id:149 attached on device:lo(ifindex:1)
+
+Collecting stats from BPF map
+ - BPF map (bpf_map_type:2) id:20 name:xdp_stats_map key_size:4 value_size:8 max_entries:5
+
+XDP-action  
+XDP_PASS               1 pkts (         4 pps) period:0.250080
+XDP_PASS               2 pkts (         0 pps) period:2.000088
+XDP_PASS               6 pkts (         2 pps) period:2.000094
+XDP_PASS               6 pkts (         0 pps) period:2.000082
+XDP_PASS              18 pkts (         6 pps) period:2.000084
+XDP_PASS              18 pkts (         0 pps) period:2.000081
+XDP_PASS              18 pkts (         0 pps) period:2.000081
+XDP_PASS              18 pkts (         0 pps) period:2.000081
+^C
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ [7msudo ./xdp_load_and_stats --dev lo[27m[7m [27m[7m--unload-all[27m[A]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ sudo ./xdp_load_and_stats --dev lo --unload-all
+[?2004l[sudo] password for xainecks: 
+Success: Unloading XDP prog name: xdp_stats1_func
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ sudo ./xdp_load_and_stats --dev lo --unload-all
+[?2004lUnable to get xdp_dispatcher program: No such file or directory
+Couldn't unload XDP program 0: Operation not permitted
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ [7mncat -lk 127.0.0.1 12345[27mncat -lk 127.0.0.1 12345
+[?2004lCommand 'ncat' not found, but can be installed with:
+sudo apt install ncat
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ sudo apt install ncap[Kt
+[?2004lReading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 0%Reading state information... Done
+The following NEW packages will be installed:
+  ncat
+0 upgraded, 1 newly installed, 0 to remove and 4 not upgraded.
+Need to get 215 kB of archives.
+After this operation, 450 kB of additional disk space will be used.
+[33m0% [Working][0m[33m0% [Working][0m            Get:1 http://pk.archive.ubuntu.com/ubuntu noble/universe amd64 ncat amd64 7.94+git20230807.3be01efb1+dfsg-3build2 [215 kB]
+[33m1% [1 ncat 3,848 B/215 kB 2%][0m[33m68% [1 ncat 183 kB/215 kB 85%][0m[33m                              100% [Working][0m              Fetched 215 kB in 2s (143 kB/s)
+
+7[0;23r8[1ASelecting previously unselected package ncat.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 162957 files and directories currently installed.)
+Preparing to unpack .../ncat_7.94+git20230807.3be01efb1+dfsg-3build2_amd64.deb ...
+7[24;0f[42m[30mProgress: [  0%][49m[39m [..........................................................................] 87[24;0f[42m[30mProgress: [ 20%][49m[39m [##############............................................................] 8Unpacking ncat (7.94+git20230807.3be01efb1+dfsg-3build2) ...
+7[24;0f[42m[30mProgress: [ 40%][49m[39m [#############################.............................................] 8Setting up ncat (7.94+git20230807.3be01efb1+dfsg-3build2) ...
+7[24;0f[42m[30mProgress: [ 60%][49m[39m [############################################..............................] 87[24;0f[42m[30mProgress: [ 80%][49m[39m [###########################################################...............] 8Processing triggers for man-db (2.12.0-4build2) ...
+
+7[0;24r8[1A[J[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ sudo apt install ncatncat -lk 127.0.0.1 12345
+[?2004lhello from sender
+^C
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/xdp-tutorial/basic03-map-counter[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/xdp-tutorial/basic03-map-counter[00m$ exit
+[?2004lexit
+
+Script done on 2026-01-18 21:31:55+05:00 [COMMAND_EXIT_CODE="130"]
