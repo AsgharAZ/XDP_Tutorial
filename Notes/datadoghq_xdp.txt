@@ -1,0 +1,27 @@
+https://www.datadoghq.com/blog/xdp-intro/
+When an incoming packet arrives at a network interface card (NIC), that packet is first transferred into a ring buffer in the kernel called the rx_ring. The packet is then copied to an instance of a data structure in the kernel network stack called an sk_buff, which stores the raw packet data and packet metadata. 
+More specifically, an XDP program normally operates on the rx_ring buffer before the packet gets copied to an sk_buff
+
+An XDP program is an eBPF-based program that typically runs as a hook point in the NIC driver. 
+
+Mechanics of XDP: 
+- An XDP program is attached to a specific NIC in a machine and can process incoming packets from that NIC only.
+- An XDP program is visible only to incoming packets.
+- The Linux kernel defines a struct called "xdp_md" (XDP Metadata) that contains information about an incoming packet, such as its location in memory and its size. The xdp_md struct is lightweight and optimized for fast packet-processing. It is also the struct that a coder uses to process and manipulate the packet in an XDP program.
+
+The flow of an XDP program: 
+- Receive the raw packet as input (given by the xdp_md struct).
+- Do some processing on the packet. (insights on its metadata or modify)
+- Determine the action to perform on the packet
+
+XDP return codes (XDP actions):
+XDP programs use return codes to determine the action the Linux kernel should perform on a network packet
+
+XDP execution modes: 
+Native (that is the default)
+Offloaded (offloading XDP on NIC itself from CPU, SmartNIC supports this. Faster.)
+Generic (hook support not available, network stack handles XDP, slower.)
+
+Ethernet is the lowest-level protocol, with all packets coming to and from network interfaces being ethernet packets.
+
+

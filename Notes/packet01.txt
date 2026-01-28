@@ -1,0 +1,25 @@
+__u32 data_meta: Used for storing metadata before the actual packet data, often utilized when chaining XDP programs (e.g., in a forwarding scenario) [1].
+__u32 ingress_ifindex: The network interface index (ifindex) where the packet was received [1].
+__u32 rx_queue_index: The specific hardware receive queue index on which the packet arrived [1
+
+For the TX and REDIRECT actions, some packet data transformation is generally required (such as rewriting ethernet header addresses)
+
+PROGRAM RETURN CODES TAK PARHA HAIN 
+
+Since an XDP program only receives a pointer to a raw data buffer, it will need to do its own parsing of packet headers. To aid in this, the kernel headers define structs that contain the packet header fields. Parsing packets generally involves a lot of casting of data 
+
+To work around limited function call support, helper functions must be inlined, meaning the compiler literally copies their machine code directly into the caller instead of generating a real call, and the __always_inline attribute forces this behavior
+
+bpf_htons() converts a 16-bit integer from host byte order to network byte order inside an eBPF/XDP program.
+Host byte order = how your CPU stores numbers in memory. little-endian. 0x1234  →  34 12  (in RAM)
+Network byte order = standardized byte order used on the wire in network protocols. big-endian. 0x1234  →  12 34  (on the wire)
+
+
+what is ethertype
+(what are control levels) 
+ICMPv6 is part of network level, even if apps like wiresharks treat it differently. 
+
+
+search what is VLAN off-load
+
+Pv4 headers can vary in size, so you’ll need to do the bounds checking in two passes: First verify that the iphdr struct itself fits in the packet payload, then compute the actual header size as hdrsize = iph->ihl * 4, and finally verify that this full size fits in the packet (and adjust the nexthdr pointer accordingly).

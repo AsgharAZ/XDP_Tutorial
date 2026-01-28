@@ -1,0 +1,24 @@
+1️⃣ What is a BPF map?
+Think of a BPF map as a special key-value store inside the Linux kernel that BPF programs can read from and write to.
+It’s like a shared memory between the kernel (where your XDP program runs) and user-space programs (like your stats tool).
+
+Key → some identifier (integer, struct, etc.)
+Value → data associated with that key (structs, counters, arrays…)
+Map type → tells the kernel how to store/manage the data
+
+2️⃣ Why BPF maps exist
+BPF/XDP programs run in the kernel, and you cannot just use normal global variables in kernel code:
+Kernel memory is isolated and checked by the BPF verifier
+You can’t allocate normal memory dynamically inside BPF
+All memory must be predefined, safe, and visible to user-space
+Maps solve this: they are pre-allocated kernel structures your BPF program can use safely.
+
+Maps are the bridge that allows XDP programs to do real work like counting packets or bytes and letting your userspace program read these stats.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+The mechanism used for sharing BPF maps between programs is called pinning
+The pinned map behaves like a normal file in /sys/fs/bpf, but internally it refers to the kernel map object.
+
+I correctly implemented the core idea: checking for a pinned map and reusing it with bpf_map__reuse_fd(). However, I missed some important improvements: making map reuse optional via a command-line flag, encapsulating the logic in a clean helper function, and pinning maps only if reuse didn’t happen. The reference solution also handles edge cases, proper error handling, and modularity. So, my version works in principle but isn’t as robust, clean, or user-friendly as the correct one.

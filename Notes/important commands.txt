@@ -1,0 +1,41 @@
+from home: eval $(~/XDP/xdp-tutorial/testenv/testenv.sh alias) 
+./testenv.sh alias
+eval $(./testenv.sh alias)
+
+important commands: 
+
+man xdp-loader 
+
+t setup 
+t setup -n testenv-01
+t status
+t teardown
+ping -c 2 fc00:dead:cafe:1::2
+
+how to see all the interfaces: 
+ip link 
+$ ip link show dev lo
+
+example of loading an interface:
+t load
+sudo xdp-loader load -m skb testenv-01 xdp_prog_kern.o
+sudo xdp-loader load -m skb lo xdp_pass_kern.o
+
+
+Removing the XDP program again from the device:
+$ sudo ip link set dev lo xdpgeneric off
+
+We can show the status of the XDP programs attached to the device:
+$ sudo xdp-loader status lo
+
+We can unload the program we just added (ID 493 in above example) using this command:
+sudo xdp-loader unload -i 493 lo 
+
+Or unload all programs using this command:
+sudo xdp-loader unload -a lo
+
+
+sudo perf record -a -e xdp:xdp_exception sleep 4
+sudo perf script
+
+Permission denied(-13) might mean that the verifier aint happy.

@@ -1,0 +1,15 @@
+
+ELF (Executable and Linkable File) is a way to store apps to be executed by a computer. 
+.exe and .elf files different are of not relevance, consider them same for now.
+The extra information is mostly stored in portions of the executable file called headers. An executable file will consist of some headers along with some pieces of an app that can each be brought into memory separately.
+clang - compiler frontend
+LLVM (Low Level Virtual Machine)- compiler backend
+
+
+Compilers take source code files as input and output object files. They merely act as translators. Linkers take Object and library files and output, .exe or lib files. They combine object files, resolves references and creates the final runnable program. 
+
+In Linux, the **host namespace** is the default network namespace in which your system boots and where all normal system networking occurs; it contains the real physical interfaces (like `enp8s0`), routing tables, firewall rules, and sockets that affect the entire machine. A **network namespace (netns)**, on the other hand, is a fully isolated instance of the networking stack created by the kernel, with its **own interfaces, IP addresses, routing tables, ARP cache, and netfilter state**, completely separate from the host. Processes running inside a netns can only see and interact with interfaces inside that namespace, and kernel operations such as XDP attachment are scoped to the namespace they execute in. In practice, netns provides isolation and safety (used by containers, Kubernetes, and the XDP tutorial), while the host namespace represents the global, system-wide network context.
+
+
+
+

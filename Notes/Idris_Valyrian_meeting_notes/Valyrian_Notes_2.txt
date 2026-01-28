@@ -1,0 +1,21 @@
+white shunting - janaae dou
+white-listed: jaanae dou magar record rakhou.
+Black-list: jaanae hi na dou. 
+challenges are in the grey area: traffic control on the highway. Somebody has paid the toll, they go to the left lane, they have the priviledge to the left lane. Hum ap ka whatsapp jaanae dae gae, agar sirf if jagah hogi. You can't hold the call which is real time, allowed video jaanae dou, text or email, you can decide when you can leave them go. lower-priority. 
+
+Content addressable memory. 
+if you take the standard server, you take the data in through the ram ,through the cache, throuugh the ram.
+google.com, network card has the ability to pull out the one port to the other port. Network card kae upar hum nae 
+https://www.canogaperkins.net/ kae upar CAM bohat kuch kardiya, lead time. 
+
+Please read what is "long tail distribution", first 10% and 90% of the time, facebook, twitter, netlfix. Leverage. 3.6Ghz.
+we start with signature where we manually change things to block, but with AI one day, we will be able to block the things. 
+We want speed and change. 
+
+network cards mein queues hoti hain, 64 queues hoti hain, and cpus mein cores hoti hain. Aur queue on the network married to the core on the cpu. 
+we are not meant to see the payload, we need to decide based on the header. 
+
+we need to do POC with them 
+
+how can we leverage XDP with the CAM, how do you use CAM to identify packets. 
+IO channels of the AMD is they paid more attention, bottle necks IO mein hoa hain, Intel nae focus sirf core hain. Ateek Raza. 

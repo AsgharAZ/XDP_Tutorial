@@ -1,0 +1,11 @@
+Full forms of everything: 
+
+NIC : Network Interface Card 
+XDP : eXpress Data Path
+eBPF: extended Berkeley Packet Filter
+ELF : Executable and Linkable File
+SEC : section 
+TC : Linux Traffic Control (TC) 
+
+xdp_md : Xpress Data Path MetaData => struct containing packet's memory-location and size..
+NIC -> RX_Ring -> NIC Driver (RUN XDP PROGRAM -> EBPF VM -> RETURN XDP ACTION) -> SK_BUFF (Network Stack)

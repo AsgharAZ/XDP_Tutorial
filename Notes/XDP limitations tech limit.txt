@@ -1,0 +1,17 @@
+XDP limitations, tech limit, what is bound limit, you code in restricted-C, 16bit integer. 
+Verifier checks whether it can run in kernel, stack size. 
+payload of the packet, unencrypted data we can still decide. No packet library provides you this much power, gives you so much power in kernel.
+
+This project will be a basic firewall, 
+usecases: It will process each and every packet. Once it parses its header and payload, you will make a flow. Flow-recording. 
+On the server, it is critical that each connection that is useless terminated. How to set the timer which decides that the flow needs to be closed.
+You will write a user-side program that will interact with kernel side using maps, jitne bhi closed flows hogae, jo file mein write karae ga, aur map sae delete karae ga. Write this to a file. 
+
+
+
+
+Flow is basically a sequence of packets, in those packets actually belong to some certain server and client, example, if you opened a browser, if you opened youtube, youtube ka session aik banaa hain, ap ka flow hain jo chal chuka hain, pehle dns resolve hoa, ip mila, three-way handshake hoa, connection establish hogaya. TCP-based connection hain, basically acknowledgement pe chalta hain, agar kuch time tak ACK recieve nahi hota, tou session break hojata hain. This session has a property, if you make any request, what qualities will it have? IPs. Layer 4 - ports laazmi hogi. Four-tuples, jo aik mil kae flow banate hain. Youtube khola tou flow generate hoa, tou your computer exposes ip and port to youtube that hits the ip and port. Flow tou aik hi tha despite 10 packets given and 20 packets recieved, making 30 packets, all 30 packets belonged to this flow. 
+
+Apna ip note karlae, one ip source and destination. You will easily understand which packet belongs to 
+
+

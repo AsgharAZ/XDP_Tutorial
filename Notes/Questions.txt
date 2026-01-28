@@ -1,0 +1,12 @@
+How does the packet completely look like in XDP?
+How do maps completely function? 
+
+REDIRECT will transmit the packet out of another interface (where the destination interface needs to be set by a BPF helper call prior to returning REDIRECT). - what does this bracket thing mean 
+
+Packet bounds checking 
+what is inlined
+daily meetings
+
+internet is a huge cable, someone online is on that line, someone standing on the very line itself is inline. 
+
+when you are writing programs, always think in the multiple-thread. 

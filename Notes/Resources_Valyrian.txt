@@ -1,0 +1,14 @@
+Resources: 
+https://prototype-kernel.readthedocs.io/en/latest/networking/XDP/index.html
+https://www.datadoghq.com/blog/xdp-intro/
+https://www.baeldung.com/linux/executable-and-linkable-format-file
+
+https://github.com/DataDog/ebpf-training/blob/main/README.md
+
+https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/
+https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/
+
+https://www.youtube.com/watch?v=58KtGtpn0_g
+
+potentially read articles: 
+https://www.tigera.io/learn/guides/ebpf/ebpf-xdp/

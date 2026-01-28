@@ -1,0 +1,3 @@
+Endianness
+
+AOA, yesterday, I continued with the tutorial to learn about rewriting packet data with direct memory access, enlarging and shrinking packet size (packet encapsulation). I did assignment that parses TCP and UDP, rewrites destination port by decrementing it. I also saw how to remove outermost VLAN tag, and add a VLAN tag when missing. I validated correctness with packet generation (socat) and inspection (tcpdump). I looked into final tutorial (redirecting packets) as well, and will keep looking into it after which, I can shift my full attention to project building. 

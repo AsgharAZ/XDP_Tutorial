@@ -1,0 +1,8 @@
+acess pro
+core balance 
+deep packet inspection 
+BNG 
+
+Each technology, try to understand as deep as possible. Conversation wouldn't make sense unless you have the necessarily background. How do we inspect, how do we speed things first, who goes first, who goes slowly, what we store, databases. 
+
+What does the BNG does, how does the data get routed, how does the data and control plane work. How does the process and guts in the machine works. Read out on the CAM (memory) about which url goes and stays, which packet goes and stays, content addressable memory. We should be able to do work ultra process. We dont need to build hardware, we leverage. We need to think outside of the box, we dont need to think normally, if you dont need them, how do you turn them off. How do you make the bucket bridgage, how do you make the archieve, how do you move the data. 
