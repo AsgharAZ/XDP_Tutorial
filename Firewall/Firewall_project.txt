@@ -1,0 +1,41 @@
+Initial Assumptions: 
+I am not coding Vlans encapsulation rn, will need to look into this later. 
+
+
+11. Final architectural summary
+
+Kernel (XDP):
+Parse packets
+Extract 5-tuple
+Update flow map
+Track timestamps
+Mark flows expired
+
+User Space:
+Periodically scan maps
+Write expired flows to file
+Delete them from kernel
+Optional CLI / stats
+
+
+struct flow_key {
+    __u32 src_ip;
+    __u32 dst_ip;
+    __u16 src_port;
+    __u16 dst_port;
+    __u8  proto;
+};
+
+struct flow_val {
+    __u64 last_seen_ns;
+    __u64 first_seen_ns;
+    __u64 packets;
+    __u64 bytes;
+    __u8  state;        // optional (TCP state approximation)
+};
+
+BPF_MAP_TYPE_HASH
+
+A 5-tuple is a set of five specific values used in networking and cybersecurity to uniquely identify a, traffic flow or communication session. It consists of the source IP address, destination IP address, source port, destination port, and the protocol (e.g., TCP or UDP)
+
+
