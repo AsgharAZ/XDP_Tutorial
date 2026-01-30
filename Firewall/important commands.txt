@@ -7,9 +7,11 @@ important commands:
 man xdp-loader 
 
 t setup 
-t setup -n testenv-01
+t setup -n TE01
 t status
 t teardown
+To test IPv4 support, you can run t setup --legacy-ip
+
 ping -c 2 fc00:dead:cafe:1::2
 
 how to see all the interfaces: 

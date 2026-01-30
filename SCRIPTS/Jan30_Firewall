@@ -1,0 +1,86 @@
+Script started on 2026-01-30 11:59:17+05:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/SCRIPTS[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/SCRIPTS[00m$ ls [K[K[Kcd .[K[K ../ 
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ ls
+[?2004l[0m[01;34mFirewall[0m  [01;34mNotes[0m  [01;34mSCRIPTS[0m  [01;34mxdp-tutorial[0m
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP[00m$ cd Firewall/
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ ls[K[Kma[K[Kc[Kls
+[?2004l Firewall_project.txt      Makefile          xdp_prog_kern_ipv6_ipv4_icmp.c
+'important commands.txt'   xdp_prog_kern.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ cd F[Kxdp_prog_[K[K[K[K[K[K[K[K[K[K[K[Ko[Kcode xdp_prog_kern.c
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ make clean 
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ make 
+[?2004l    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t load [7mt setup -n TE01[27mt setup -n TE01--leg[K[K[K[K[K --lega[Kacy-ip
+[?2004lt: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t load t setup -n TE01 --legacy-ip[1P[1P[1P[1P[1P[1P[1P
+[?2004lt: command not found
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [7meval $(~/XDP/xdp-tutorial/testenv/testenv.[27m[7ms[27m[7mh alias)[27m[A]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ eval $(~/XDP/xdp-tutorial/testenv/testenv.sh alias)
+[?2004lWARNING: Creating sudo alias; be careful, this script WILL execute arbitrary programs
+
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ eval $(~/XDP/xdp-tutorial/testenv/testenv.sh alias)[A]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [15Pt setup -n TE01 --legacy-ip
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004l[sudo] password for xainecks: 
+Sorry, try again.
+[sudo] password for xainecks: 
+Setting up new environment 'TE01'
+Setup environment 'TE01' with peer ip fc00:dead:cafe:1::2 and 10.11.1.2.
+Waiting for interface configuration to settle...
+
+Running ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.030 ms
+
+--- fc00:dead:cafe:1::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.030/0.030/0.030/0.000 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t ping
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.027 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=2 ttl=64 time=0.025 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=3 ttl=64 time=0.023 ms
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2036ms
+rtt min/avg/max/mdev = 0.023/0.025/0.027/0.001 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t stats
+[?2004lWARN: Failed to open bpf map file:/sys/fs/bpf/TE01/xdp_stats_map err(2):No such file or directory
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t [K[Kt stats[C[K[K[K[Kp[K[Kping --legacy-ip
+[?2004lRunning ping from inside test environment:
+
+PING 10.11.1.1 (10.11.1.1) 56(84) bytes of data.
+64 bytes from 10.11.1.1: icmp_seq=1 ttl=64 time=0.024 ms
+64 bytes from 10.11.1.1: icmp_seq=2 ttl=64 time=0.021 ms
+^C
+--- 10.11.1.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1004ms
+rtt min/avg/max/mdev = 0.021/0.022/0.024/0.001 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ make clean
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ make 
+[?2004l    CLANG    xdp_prog_kern.o
+    COPY     xdp-loader
+    COPY     xdp_stats
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ make cleant ping --legacy-ipstats[K[1Ppingstatsping --legacy-ip[8Pmake clean[K[K[K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ [K]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t load [K xdp-[K[K[K[K[K[K[K[K[K[K[Kls
+[?2004l Firewall_project.txt      [0m[01;32mxdp-loader[0m                       xdp_prog_kern.o
+'important commands.txt'   xdp_prog_kern.c                  [01;32mxdp_stats[0m
+ Makefile                  xdp_prog_kern_ipv6_ipv4_icmp.c
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t load xdp_load[K[K[K[Kprog_kern.o
+[?2004l[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t load xdp_prog_kern.ols[Kmake cleant ping --legacy-ipstats[Kping --legacy-ip[K[K[K[K[K[K[K[K[K[K[K
+[?2004lRunning ping from inside test environment:
+
+PING fc00:dead:cafe:1::1 (fc00:dead:cafe:1::1) 56 data bytes
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=1 ttl=64 time=0.054 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=2 ttl=64 time=0.025 ms
+64 bytes from fc00:dead:cafe:1::1: icmp_seq=3 ttl=64 time=0.025 ms
+^C
+--- fc00:dead:cafe:1::1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2040ms
+rtt min/avg/max/mdev = 0.025/0.034/0.054/0.013 ms
+[?2004h]0;xainecks@xainecks-PC1: ~/XDP/Firewall[01;32mxainecks@xainecks-PC1[00m:[01;34m~/XDP/Firewall[00m$ t ping -lega[K[K[K[K;[K-legacy-ip
+[?2004lRunning ping from inside test environment:
+
+PING 10.11.1.1 (10.

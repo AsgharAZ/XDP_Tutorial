@@ -218,10 +218,40 @@ int  xdp_parser_func(struct xdp_md *ctx)
 		else if (nh_type == IPPROTO_TCP) {
 			if (parse_tcphdr(&nh, data_end, &tcph) < 0)
 				goto out;
+			
+			//“Drop all new inbound TCP connection attempts to SSH.”
+
+			//“This packet is attempting to initiate a new TCP connection.”
+			// Not match with Established connections, server replies, Existing flows.
+			// Blocks ; Port scans, Brute-force attempts, Random internet SSH probes. Makes it Immune to SYN flood CPU exhaustion
+			//default-deny for new connections
+
+			// Makes it Immune to SYN flood CPU exhaustion
+			// Drops new inbound SSH connection attempts early at XDP
+			// Reduces exposure to SSH scans and brute-force attempts
+			if (tcph->syn && !tcph->ack &&
+				//Port 22 = SSH.
+				//“Someone is trying to open a new inbound SSH connection.”
+    			tcph->dest == bpf_htons(22)) {
+    			action = XDP_DROP;
+				goto out;
+			}
 		}
+
+		//UDP
 		else if (nh_type == IPPROTO_UDP) {
 			if (parse_udphdr(&nh, data_end, &udph) < 0)
 				goto out;
+
+			// The following makes sure that only DNS requests or Replies are allowed, rest are dropped to reduce risk of "amplification attacks" (type of ddos attack)
+			// Restrict UDP traffic to DNS only (requests + replies)
+			// Reduces UDP attack surface
+			if (udph->dest != bpf_htons(53) &&
+				udph->source != bpf_htons(53)) {
+				action = XDP_DROP;
+				goto out;
+			}
+
 		}
 		else {
 			goto out;
@@ -229,8 +259,8 @@ int  xdp_parser_func(struct xdp_md *ctx)
 		action = XDP_PASS;
 	}
 
+	// IPV4 ////////////////////////////
 	else if (nh_type == bpf_htons(ETH_P_IP)){
-		/* IPv4 path */
 		struct iphdr *iph;
 		struct icmphdr *icmph;
 
@@ -244,14 +274,30 @@ int  xdp_parser_func(struct xdp_md *ctx)
 		if (nh_type == IPPROTO_ICMP) {
 			if (parse_icmphdr(&nh, data_end, &icmph) < 0)
 				goto out;
+			if (icmph->type == ICMP_ECHO) {
+				action = XDP_DROP;
+				goto out;
+			}
 		}
 		else if (nh_type == IPPROTO_TCP) {
 			if (parse_tcphdr(&nh, data_end, &tcph) < 0)
 				goto out;
+
+			if (tcph->syn && !tcph->ack &&
+    			tcph->dest == bpf_htons(22)) {
+    			action = XDP_DROP;
+				goto out;
+				}
 		}
 		else if (nh_type == IPPROTO_UDP) {
 			if (parse_udphdr(&nh, data_end, &udph) < 0)
 				goto out;
+
+			if (udph->dest != bpf_htons(53) &&
+				udph->source != bpf_htons(53)) {
+				action = XDP_DROP;
+				goto out;
+			}
 		}
 		else {
 			goto out;

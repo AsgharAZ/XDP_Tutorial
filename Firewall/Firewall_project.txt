@@ -1,6 +1,8 @@
 Initial Assumptions: 
 I am not coding Vlans encapsulation rn, will need to look into this later. 
 
+We will be creating Stateful Firewall. 
+https://www.geeksforgeeks.org/computer-networks/stateless-vs-stateful-packet-filtering-firewalls/
 
 11. Final architectural summary
 
