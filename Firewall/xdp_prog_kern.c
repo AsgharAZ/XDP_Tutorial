@@ -126,7 +126,6 @@ static __always_inline int parse_icmphdr(struct hdr_cursor *nh,
 //       ├── TCP
 //       └── UDP
 
-
 //parse_udphdr: parse the udp header and return the length of the udp payload
 static __always_inline int parse_udphdr(struct hdr_cursor *nh,
 					void *data_end,
@@ -147,6 +146,7 @@ static __always_inline int parse_udphdr(struct hdr_cursor *nh,
 
 	return len;
 }
+
 
 //parse_tcphdr: parse and return the length of the tcp header
 static __always_inline int parse_tcphdr(struct hdr_cursor *nh,
@@ -173,6 +173,30 @@ static __always_inline int parse_tcphdr(struct hdr_cursor *nh,
 
 	return len;
 }
+
+// FLOW
+struct flow_key_v4 {
+    __u32 src_ip;
+    __u32 dst_ip;
+    __u16 src_port;
+    __u16 dst_port;
+    __u8  proto;
+};
+
+//activity tracking, don’t need full TCP FSM
+struct flow_state {
+    __u64 last_seen_ns;   // bpf_ktime_get_ns()
+    __u64 packets;
+    __u64 bytes;
+    __u8  tcp_state;     // optional but recommended
+};
+
+struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, 262144);
+    __type(key, struct flow_key_v4);
+    __type(value, struct flow_state);
+} flow_map SEC(".maps");
 
 SEC("xdp")
 int  xdp_parser_func(struct xdp_md *ctx)
@@ -263,7 +287,9 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	else if (nh_type == bpf_htons(ETH_P_IP)){
 		struct iphdr *iph;
 		struct icmphdr *icmph;
+		struct flow_key_v4 key = {}; //flow ip4
 
+		
 		nh_type = parse_iphdr(&nh, data_end, &iph);
 		if (nh_type < 0)
 			goto out;
@@ -303,6 +329,11 @@ int  xdp_parser_func(struct xdp_md *ctx)
 			goto out;
 		}
 
+		// key.src_ip   = iph->saddr;
+		// key.dst_ip   = iph->daddr;
+		// key.src_port = tcph->source;
+		// key.dst_port = tcph->dest;
+		// key.proto    = IPPROTO_TCP;
 		// if (parse_icmphdr(&nh, data_end, &icmph) < 0)
 		// 	goto out;
 
