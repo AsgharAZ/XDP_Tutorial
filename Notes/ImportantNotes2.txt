@@ -1,0 +1,1 @@
+Netcat (nc) is a versatile command-line networking utility for reading/writing data across network connections using TCP or UDP

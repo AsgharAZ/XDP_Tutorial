@@ -1,0 +1,17 @@
+This is display syntax, not the real interface name.
+
+TE → actual interface name
+@if2 → means “peer is ifindex 2” (veth pairing metadata)
+
+
+If you pass TE@if2, user-space tools may:
+    Fail to resolve the interface
+    Fail to find attached BPF maps
+    Attach to nothing
+    
+Remember architecture:
+Namespace TE
+    ↓
+veth peer
+    ↓
+Host side interface: TE  ← XDP attached here
