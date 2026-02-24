@@ -2,6 +2,12 @@ from home: eval $(~/XDP/xdp-tutorial/testenv/testenv.sh alias)
 ./testenv.sh alias
 eval $(./testenv.sh alias)
 
+t setup -n TE --legacy-ip
+
+nc -l -p 8080
+t exec nc -v fc00:dead:cafe:1::1 80
+
+
 important commands: 
 
 man xdp-loader 
@@ -14,9 +20,15 @@ To test IPv4 support, you can run t setup --legacy-ip
 
 ping -c 2 fc00:dead:cafe:1::2
 
+if you want to enter the namespace: 
+t enter 
+
+if you want to run any commands from the namespace:
+t exec nc -v fc00:dead:cafe:1::1 80
+
 how to see all the interfaces: 
 ip link 
-$ ip link show dev lo
+$ ip link show dev lo-
 
 example of loading an interface:
 t load

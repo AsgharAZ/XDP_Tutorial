@@ -198,27 +198,6 @@ struct {
     __type(value, struct flow_state);
 } flow_map SEC(".maps");
 
-//Add a tiny helper to update/create flow
-static __always_inline void
-update_flow(struct flow_key_v4 *key, __u64 bytes)
-{
-    struct flow_state *state;
-    __u64 now = bpf_ktime_get_ns();
-
-    state = bpf_map_lookup_elem(&flow_map, key);
-    if (state) {
-        state->last_seen_ns = now;
-        state->packets++;
-        state->bytes += bytes;
-    } else {
-        struct flow_state new = {};
-        new.last_seen_ns = now;
-        new.packets = 1;
-        new.bytes = bytes;
-        bpf_map_update_elem(&flow_map, key, &new, BPF_ANY);
-    }
-}
-
 SEC("xdp")
 int  xdp_parser_func(struct xdp_md *ctx)
 {
@@ -304,7 +283,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 		action = XDP_PASS;
 	}
 
-	////////////////////////////////////// IPV4 ////////////////////////////
+	// IPV4 ////////////////////////////
 	else if (nh_type == bpf_htons(ETH_P_IP)){
 		struct iphdr *iph;
 		struct icmphdr *icmph;
@@ -326,97 +305,24 @@ int  xdp_parser_func(struct xdp_md *ctx)
 				goto out;
 			}
 		}
-		//Existing flows bypass policy
-		// Only SYN can create new TCP flows
-		// ACKs without a flow are dropped (real firewall behavior)
-
 		else if (nh_type == IPPROTO_TCP) {
 			if (parse_tcphdr(&nh, data_end, &tcph) < 0)
 				goto out;
 
-			/* Build flow key */
-			key.src_ip   = iph->saddr;
-			key.dst_ip   = iph->daddr;
-			key.src_port = tcph->source;
-			key.dst_port = tcph->dest;
-			key.proto    = IPPROTO_TCP;
-
-			/* Reverse key */
-			struct flow_key_v4 rev = {
-				.src_ip   = key.dst_ip,
-				.dst_ip   = key.src_ip,
-				.src_port = key.dst_port,
-				.dst_port = key.src_port,
-				.proto    = IPPROTO_TCP,
-			};
-
-			struct flow_state *state;
-			state = bpf_map_lookup_elem(&flow_map, &key);
-			if (!state)
-				state = bpf_map_lookup_elem(&flow_map, &rev);
-
-			if (!state) {
-				/* Drop SSH */
-				if (tcph->syn && !tcph->ack &&
-					tcph->dest == bpf_htons(22)) {
-					action = XDP_DROP;
-					goto out;
+			if (tcph->syn && !tcph->ack &&
+    			tcph->dest == bpf_htons(22)) {
+    			action = XDP_DROP;
+				goto out;
 				}
-
-				/* Only SYN creates flow */
-				if (!(tcph->syn && !tcph->ack)) {
-					action = XDP_DROP;
-					goto out;
-				}
-
-				update_flow(&key, data_end - data);
-			} else {
-				state->last_seen_ns = bpf_ktime_get_ns();
-				state->packets++;
-				state->bytes += data_end - data;
-			}
 		}
-
-		//No handshake
-		//Simple activity-based flow
 		else if (nh_type == IPPROTO_UDP) {
 			if (parse_udphdr(&nh, data_end, &udph) < 0)
 				goto out;
 
-			/* Build flow key */
-			key.src_ip   = iph->saddr;
-			key.dst_ip   = iph->daddr;
-			key.src_port = udph->source;
-			key.dst_port = udph->dest;
-			key.proto    = IPPROTO_UDP;
-
-			/* Reverse flow key */
-			struct flow_key_v4 rev = {
-				.src_ip   = key.dst_ip,
-				.dst_ip   = key.src_ip,
-				.src_port = key.dst_port,
-				.dst_port = key.src_port,
-				.proto    = IPPROTO_UDP,
-			};
-
-			struct flow_state *state;
-			state = bpf_map_lookup_elem(&flow_map, &key);
-			if (!state)
-				state = bpf_map_lookup_elem(&flow_map, &rev);
-
-			if (!state) {
-				/* Only allow DNS to create new flow */
-				if (udph->dest != bpf_htons(53) &&
-					udph->source != bpf_htons(53)) {
-					action = XDP_DROP;
-					goto out;
-				}
-
-				update_flow(&key, data_end - data);
-			} else {
-				state->last_seen_ns = bpf_ktime_get_ns();
-				state->packets++;
-				state->bytes += data_end - data;
+			if (udph->dest != bpf_htons(53) &&
+				udph->source != bpf_htons(53)) {
+				action = XDP_DROP;
+				goto out;
 			}
 		}
 		else {
