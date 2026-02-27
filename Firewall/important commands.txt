@@ -7,7 +7,6 @@ t setup -n TE --legacy-ip
 nc -l -p 8080
 t exec nc -v fc00:dead:cafe:1::1 80
 
-
 important commands: 
 
 man xdp-loader 
@@ -53,3 +52,11 @@ sudo perf record -a -e xdp:xdp_exception sleep 4
 sudo perf script
 
 Permission denied(-13) might mean that the verifier aint happy.
+
+alternative way loading:
+sudo ip link set dev enp8s0 xdp obj xdp_prog_kern.o sec xdp (you attach to the interface using this)
+ip link show dev enp8s0 (you verify the attachment using this)
+sudo ip link set dev enp8s0 xdp off (if you forgot to remove the xdp) 
+Extra Information:
+You can also use loaders like xdp-loader or libbpf userspace code to attach programs if you want more control.
+Modern systems may default to generic mode (xdpgeneric) instead of native depending on driver/kernel support.
